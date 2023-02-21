@@ -55,7 +55,12 @@ class NoteListAdapter(
                 val action = NotesFragmentDirections.actionNotesFragmentSelf(parent,parentId)
                 fragment.findNavController().navigate(action)
             } else {
-                Toast.makeText(fragment.context, "it is a note!", Toast.LENGTH_LONG).show()
+                val name = current.name
+                val desc = current.description
+                val id = current.id
+                val parent = current.parent
+                val action=NotesFragmentDirections.actionNotesFragmentToNoteDetailsFragment(id,name,desc,parent)
+                fragment.findNavController().navigate(action)
             }
         }
 
