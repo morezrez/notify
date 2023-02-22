@@ -13,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import mamali.qa.notify.ConvertDigitsToPersian.toPersianDigit
 import mamali.qa.notify.database.NoteEntity
 
 
@@ -40,7 +41,7 @@ class NoteListAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         val current = getItem(position)
-        holder.txtFileTitle.text = current.name
+        holder.txtFileTitle.text = current.name.toPersianDigit()
         if (current.kind == "Note") {
             holder.apply {
                 imgFileHighlight.setImageResource(R.drawable.note_icon_circle_highlight)
@@ -101,3 +102,5 @@ class NoteListAdapter(
 interface NoteClickDeleteInterface {
     fun onDeleteIconClick(id: Int)
 }
+
+
