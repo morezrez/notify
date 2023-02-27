@@ -9,12 +9,13 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import mamali.qa.notify.ConvertDigitsToPersian.toPersianDigit
+import mamali.qa.notify.database.NoteDao
 import mamali.qa.notify.database.NoteEntity
 import mamali.qa.notify.repositories.NoteRepository
 
 class NoteViewModel(private val repository: NoteRepository) : ViewModel() {
 
-    var listLiveData: LiveData<List<NoteEntity>> = MutableLiveData(emptyList())
+    var listLiveData: LiveData<List<NoteDao.NoteEntityWithCount>> = MutableLiveData(emptyList())
 
     fun getNotes(parentId: Int? = -1) = viewModelScope.launch {
        listLiveData = repository.getNotes(parentId)
