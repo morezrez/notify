@@ -1,17 +1,19 @@
 package mamali.qa.notify
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.SimpleItemAnimator
 import mamali.qa.notify.databinding.FragmentNotesBinding
+
 
 class NotesFragment : Fragment(), NoteClickDeleteInterface {
 
@@ -32,6 +34,8 @@ class NotesFragment : Fragment(), NoteClickDeleteInterface {
             adapter = recyclerAdapter
             layoutManager = LinearLayoutManager(requireActivity())
         }
+        (binding.notesRecyclerView.getItemAnimator() as SimpleItemAnimator).supportsChangeAnimations = false
+
 //get arguments
         val bundle = arguments
         val args = bundle?.let { NotesFragmentArgs.fromBundle(it) }

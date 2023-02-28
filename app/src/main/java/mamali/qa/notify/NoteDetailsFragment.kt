@@ -9,10 +9,13 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import mamali.qa.notify.Utils.getFormatted
+import mamali.qa.notify.Utils.toPersianDigit
 import mamali.qa.notify.databinding.FragmentNoteDetailsBinding
 import mamali.qa.notify.databinding.FragmentNotesBinding
 import mamali.qa.notify.viewModel.NoteDetailViewModel
 import mamali.qa.notify.viewModel.NoteDetailViewModelFactory
+import java.util.Date
 
 
 @Suppress("SENSELESS_COMPARISON")
@@ -26,6 +29,9 @@ class NoteDetailsFragment : Fragment() {
     lateinit var desc: String
     lateinit var title: String
     lateinit var desc2: String
+    val dateUTC: Long = System.currentTimeMillis()
+    val date: Date = Date(dateUTC)
+    val shamsi: String = date.getFormatted()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,6 +47,7 @@ class NoteDetailsFragment : Fragment() {
             binding.edtNoteTitle.setText(name)
             binding.edtNoteDetail.setText(desc)
         }
+        binding.txtNoteDate.text = shamsi.toPersianDigit()
 
 
         return binding.root
@@ -58,13 +65,13 @@ class NoteDetailsFragment : Fragment() {
                 val parentId = args?.parentId
 
                 if (name != null && desc != null && parentId != null && name != "null" && desc != "null") {
-                    noteDetailViewModel.updateNote(title, desc2, parentId)
+                    noteDetailViewModel.updateNote(title, desc2, parentId, dateUTC)
                 } else if (binding.edtNoteTitle.text.isNotEmpty() && binding.edtNoteDetail.text.isNotEmpty()) {
                     parent?.let {
                         parentId?.let { it1 ->
                             noteDetailViewModel.getInput(
                                 title, desc2, kind, it,
-                                it1
+                                it1, dateUTC
                             )
                         }
                     }

@@ -11,5 +11,6 @@ data class NoteEntity(
     @ColumnInfo(name = "kind") val kind: String,
     @ColumnInfo(name = "parent") val parent: String?=null,
     @ColumnInfo(name = "parent_id") val parentId: Int?=null,
+    @ColumnInfo(name = "date") val date: Long?=null,
     @PrimaryKey(autoGenerate = true) val id: Int=0
 )

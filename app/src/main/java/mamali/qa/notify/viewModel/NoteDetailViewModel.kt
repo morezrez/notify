@@ -15,21 +15,28 @@ import mamali.qa.notify.repositories.NoteRepository
 class NoteDetailViewModel(private val repository: NoteRepository) : ViewModel() {
 
     fun insert(note: NoteEntity) = viewModelScope.launch {
-        withContext(Dispatchers.IO){
+        withContext(Dispatchers.IO) {
 
             repository.insert(note)
         }
 
     }
 
-    fun getInput(title: String, desc: String, kind: String, parent: String, parentId: Int) {
-        var note = NoteEntity(title, desc, kind, parent, parentId)
+    fun getInput(
+        title: String,
+        desc: String,
+        kind: String,
+        parent: String,
+        parentId: Int,
+        date: Long
+    ) {
+        var note = NoteEntity(title, desc, kind, parent, parentId,date)
         insert(note)
     }
 
-    fun updateNote(name: String, desc: String, id: Int) = viewModelScope.launch {
+    fun updateNote(name: String, desc: String, id: Int, date: Long) = viewModelScope.launch {
         withContext(Dispatchers.IO) {
-            repository.updateNote(name, desc, id)
+            repository.updateNote(name, desc, id,date)
         }
     }
 
