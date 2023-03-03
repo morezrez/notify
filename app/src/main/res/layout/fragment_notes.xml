@@ -23,7 +23,7 @@
         android:id="@+id/toolbar_title_txt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="24dp"
+        android:layout_marginEnd="4dp"
         android:fontFamily="@font/iraniansans"
         android:textColor="@color/toolbar_title_color"
         android:textSize="18sp"
@@ -35,10 +35,12 @@
         android:text="یادداشت‌ها" />
 
     <ImageView
+        android:paddingVertical="8dp"
+        android:paddingHorizontal="8dp"
         android:id="@+id/ic_back_toolbar"
-        android:layout_width="18dp"
-        android:layout_height="18dp"
-        android:layout_marginEnd="16dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
         android:src="@drawable/ic_back_toolbar"
         app:layout_constraintBottom_toBottomOf="@+id/toolbar"
         app:layout_constraintEnd_toEndOf="@+id/toolbar"
@@ -46,7 +48,8 @@
         android:visibility="invisible"/>
 
     <ImageView
-        android:padding="16dp"
+        android:paddingVertical="8dp"
+        android:paddingHorizontal="16dp"
         android:id="@+id/toolbar_option_blub_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

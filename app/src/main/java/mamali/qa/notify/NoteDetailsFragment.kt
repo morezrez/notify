@@ -1,10 +1,13 @@
 package mamali.qa.notify
 
 import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupWindow
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
@@ -19,12 +22,14 @@ import java.util.Date
 
 
 @Suppress("SENSELESS_COMPARISON")
+
 class NoteDetailsFragment : Fragment() {
     lateinit var binding: FragmentNoteDetailsBinding
 
     private val noteDetailViewModel: NoteDetailViewModel by viewModels {
         NoteDetailViewModelFactory((requireActivity().application as NotesApplication).repository)
     }
+
     lateinit var name: String
     lateinit var desc: String
     lateinit var title: String
@@ -32,6 +37,7 @@ class NoteDetailsFragment : Fragment() {
     val dateUTC: Long = System.currentTimeMillis()
     val date: Date = Date(dateUTC)
     val shamsi: String = date.getFormatted()
+    var popup: PopupWindow? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,34 +45,65 @@ class NoteDetailsFragment : Fragment() {
     ): View? {
         binding = FragmentNoteDetailsBinding.inflate(inflater, container, false)
 
-
+        //get arguments
         val args = getArgs()
         name = args?.name.toString()
         desc = args?.desc.toString()
+
+        //handel difference between new note and some old note that have desc and title
         if (name != null && desc != null && name != "null" && desc != "null") {
             binding.edtNoteTitle.setText(name)
             binding.edtNoteDetail.setText(desc)
         }
+
+        //date
         binding.txtNoteDate.text = shamsi.toPersianDigit()
+
+        binding.icBackToolbarNoteDetail.setOnClickListener {
+            activity?.onBackPressed()
+        }
+
+
+        //delete and update popup menu
+        binding.optionBlubIconNoteDetail.setOnClickListener {
+            if (name != null && desc != null && args?.parentId != null && name != "null" && desc != "null") {
+                popup = showPopUpDelete(requireContext()) {
+                    noteDetailViewModel.deleteNote(args.parentId)
+                    popup?.dismiss()
+                    activity?.onBackPressed()
+                }
+                popup?.isOutsideTouchable = true
+                popup?.isFocusable = true
+                popup?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                popup?.showAsDropDown(binding.optionBlubIconNoteDetail)
+            } else {
+                Toast.makeText(context, "هنوز یادداشتی ذخیره نشده است", Toast.LENGTH_SHORT).show()
+            }
+        }
 
 
         return binding.root
     }
 
+
+    //when user click on back button
     override fun onAttach(context: Context) {
         super.onAttach(context)
         val callback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
+
                 title = binding.edtNoteTitle.text.toString()
                 desc2 = binding.edtNoteDetail.text.toString()
                 val kind = "Note"
                 val args = getArgs()
                 val parent = args?.parent
                 val parentId = args?.parentId
-
+                //for notes that already exist
                 if (name != null && desc != null && parentId != null && name != "null" && desc != "null") {
                     noteDetailViewModel.updateNote(title, desc2, parentId, dateUTC)
-                } else if (binding.edtNoteTitle.text.isNotEmpty() && binding.edtNoteDetail.text.isNotEmpty()) {
+                }
+                //for new note
+                else if (binding.edtNoteTitle.text.isNotEmpty() && binding.edtNoteDetail.text.isNotEmpty()) {
                     parent?.let {
                         parentId?.let { it1 ->
                             noteDetailViewModel.getInput(
@@ -86,6 +123,7 @@ class NoteDetailsFragment : Fragment() {
         )
     }
 
+    //function for get arguments
     fun getArgs(): NoteDetailsFragmentArgs? {
         val bundle = arguments
         val args = bundle?.let { NoteDetailsFragmentArgs.fromBundle(it) }

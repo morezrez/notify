@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.PopupMenu
+import android.widget.PopupWindow
 import android.widget.TextView
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DiffUtil
@@ -32,6 +33,7 @@ class NoteListAdapter(
         val imgOptionBlubIcon: ImageView = ItemView.findViewById(R.id.option_blub_icon)
     }
 
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view =
             LayoutInflater.from(parent.context).inflate(R.layout.recyclerview_item, parent, false)
@@ -43,18 +45,20 @@ class NoteListAdapter(
         val current = getItem(position)
 
         holder.txtFileTitle.text = current.name.toPersianDigit()
+
         if (current.kind == "Note") {
             holder.apply {
                 imgFileHighlight.setImageResource(R.drawable.note_icon_circle_highlight)
                 imgFileicon.setImageResource(R.drawable.note_icon_vector)
-                val lastDate = Date(current.date?:0L).getRelativeTime()
-                txtFileDetail.text=lastDate.toPersianDigit()
+                val lastDate = Date(current.date ?: 0L).getRelativeTime()
+                txtFileDetail.text = lastDate.toPersianDigit()
             }
-        }else{
-            if (current.children!=null){
-            holder.txtFileDetail.text="حاوی "+current.children.toString().toPersianDigit()+" فایل"}
-            else{
-                holder.txtFileDetail.text="خالی"
+        } else {
+            if (current.children != null) {
+                holder.txtFileDetail.text =
+                    "حاوی " + current.children.toString().toPersianDigit() + " فایل"
+            } else {
+                holder.txtFileDetail.text = "خالی"
             }
         }
 
@@ -64,7 +68,7 @@ class NoteListAdapter(
             if (current.kind == "file") {
                 val parent = current.name
                 val parentId = current.id
-                val action = NotesFragmentDirections.actionNotesFragmentSelf(parent,parentId)
+                val action = NotesFragmentDirections.actionNotesFragmentSelf(parent, parentId)
                 fragment.findNavController().navigate(action)
             } else {
 
@@ -72,47 +76,49 @@ class NoteListAdapter(
                 val desc = current.description
                 val id = current.id
                 val parent = current.parent
-                val action=NotesFragmentDirections.actionNotesFragmentToNoteDetailsFragment(id,name,desc,parent)
+                val action = NotesFragmentDirections.actionNotesFragmentToNoteDetailsFragment(
+                    id,
+                    name,
+                    desc,
+                    parent
+                )
                 fragment.findNavController().navigate(action)
             }
         }
 
 
         holder.imgOptionBlubIcon.setOnClickListener {
-            val popup = PopupMenu(fragment.context, holder.imgOptionBlubIcon)
-            popup.inflate(R.menu.delete_memu)
-            popup.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener { item: MenuItem? ->
-                when (item!!.itemId) {
-                    R.id.menu1 -> {
-                        noteClickDeleteInterface.onDeleteIconClick(current.id)
-
-                    }
-                }
-                true
-            })
-            popup.show()
+            noteClickDeleteInterface.onDeleteIconClick(current.id, holder.imgOptionBlubIcon)
         }
-
     }
 
 
     companion object {
-        private val NOTES_COMPARATOR = object : DiffUtil.ItemCallback<NoteDao.NoteEntityWithCount>() {
-            override fun areItemsTheSame(oldItem: NoteDao.NoteEntityWithCount, newItem: NoteDao.NoteEntityWithCount): Boolean {
-                return oldItem === newItem
-            }
+        private val NOTES_COMPARATOR =
+            object : DiffUtil.ItemCallback<NoteDao.NoteEntityWithCount>() {
+                override fun areItemsTheSame(
+                    oldItem: NoteDao.NoteEntityWithCount,
+                    newItem: NoteDao.NoteEntityWithCount
+                ): Boolean {
+                    return oldItem.id == newItem.id
+                }
 
-            override fun areContentsTheSame(oldItem: NoteDao.NoteEntityWithCount, newItem: NoteDao.NoteEntityWithCount): Boolean {
-                return oldItem.name == newItem.name
+                override fun areContentsTheSame(
+                    oldItem: NoteDao.NoteEntityWithCount,
+                    newItem: NoteDao.NoteEntityWithCount
+                ): Boolean {
+                    return oldItem.name == newItem.name
+                }
             }
-        }
     }
 
 
 }
 
 interface NoteClickDeleteInterface {
-    fun onDeleteIconClick(id: Int)
+    fun onDeleteIconClick(id: Int, imgOptionBlub: ImageView)
 }
+
+
 
 

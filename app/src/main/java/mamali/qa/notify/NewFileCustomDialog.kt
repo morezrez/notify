@@ -9,6 +9,8 @@ import androidx.fragment.app.viewModels
 import mamali.qa.notify.database.NoteEntity
 import mamali.qa.notify.databinding.DialogAddFileBinding
 
+//dialog for update and add new file handel here
+
 class NewFileCustomDialog(parent: String, parentId: Int?) : DialogFragment() {
 
     val parent = parent
