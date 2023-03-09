@@ -8,7 +8,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import mamali.qa.notify.ConvertDigitsToPersian.toPersianDigit
+import mamali.qa.notify.Utils.toPersianDigit
 import mamali.qa.notify.database.NoteDao
 import mamali.qa.notify.database.NoteEntity
 import mamali.qa.notify.repositories.NoteRepository

@@ -1,6 +1,5 @@
 package mamali.qa.notify
 
-import android.content.ClipData
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -8,14 +7,14 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.PopupMenu
 import android.widget.TextView
-import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import mamali.qa.notify.ConvertDigitsToPersian.toPersianDigit
+import mamali.qa.notify.Utils.getRelativeTime
+import mamali.qa.notify.Utils.toPersianDigit
 import mamali.qa.notify.database.NoteDao
-import mamali.qa.notify.database.NoteEntity
+import java.util.Date
 
 
 class NoteListAdapter(
@@ -48,6 +47,8 @@ class NoteListAdapter(
             holder.apply {
                 imgFileHighlight.setImageResource(R.drawable.note_icon_circle_highlight)
                 imgFileicon.setImageResource(R.drawable.note_icon_vector)
+                val lastDate = Date(current.date?:0L).getRelativeTime()
+                txtFileDetail.text=lastDate.toPersianDigit()
             }
         }else{
             if (current.children!=null){
@@ -56,6 +57,8 @@ class NoteListAdapter(
                 holder.txtFileDetail.text="خالی"
             }
         }
+
+
 
         holder.txtFileTitle.setOnClickListener {
             if (current.kind == "file") {
