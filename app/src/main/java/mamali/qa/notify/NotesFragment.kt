@@ -61,8 +61,7 @@ class NotesFragment : Fragment(), NoteClickDeleteInterface {
             val action =
                 parentId?.let { it1 ->
                     NotesFragmentDirections.actionNotesFragmentToNoteDetailsFragment(
-                        it1, parent
-                    )
+                        it1, null,null,parent)
                 }
             action?.let { it1 -> findNavController().navigate(it1) }
         }

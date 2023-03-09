@@ -46,9 +46,10 @@
         android:visibility="invisible"/>
 
     <ImageView
+        android:padding="16dp"
         android:id="@+id/toolbar_option_blub_icon"
-        android:layout_width="4dp"
-        android:layout_height="18dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:src="@drawable/option_blub_icon"
         app:layout_constraintBottom_toBottomOf="@+id/toolbar"

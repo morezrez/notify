@@ -22,4 +22,7 @@ interface NoteDao {
 
     @Query("UPDATE note_table SET name= (CASE WHEN id=:id THEN :name ELSE name END), parent=(CASE WHEN parent_id=:id THEN :name ELSE parent END)")
     fun updateFile(id: Int?, name: String)
+
+    @Query("UPDATE note_table SET name=:name,description=:desc WHERE id=:id")
+    fun updateNote(name: String, desc: String, id: Int)
 }
