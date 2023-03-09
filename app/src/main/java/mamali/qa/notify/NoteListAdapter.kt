@@ -13,6 +13,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import mamali.qa.notify.ConvertDigitsToPersian.toPersianDigit
+import mamali.qa.notify.database.NoteDao
 import mamali.qa.notify.database.NoteEntity
 
 
@@ -20,7 +22,7 @@ class NoteListAdapter(
     val fragment: NotesFragment,
     val noteClickDeleteInterface: NoteClickDeleteInterface
 ) :
-    ListAdapter<NoteEntity, NoteListAdapter.ViewHolder>(NOTES_COMPARATOR) {
+    ListAdapter<NoteDao.NoteEntityWithCount, NoteListAdapter.ViewHolder>(NOTES_COMPARATOR) {
 
 
     inner class ViewHolder(ItemView: View) : RecyclerView.ViewHolder(ItemView) {
@@ -40,11 +42,18 @@ class NoteListAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         val current = getItem(position)
-        holder.txtFileTitle.text = current.name
+
+        holder.txtFileTitle.text = current.name.toPersianDigit()
         if (current.kind == "Note") {
             holder.apply {
                 imgFileHighlight.setImageResource(R.drawable.note_icon_circle_highlight)
                 imgFileicon.setImageResource(R.drawable.note_icon_vector)
+            }
+        }else{
+            if (current.children!=null){
+            holder.txtFileDetail.text="حاوی "+current.children.toString().toPersianDigit()+" فایل"}
+            else{
+                holder.txtFileDetail.text="خالی"
             }
         }
 
@@ -55,6 +64,7 @@ class NoteListAdapter(
                 val action = NotesFragmentDirections.actionNotesFragmentSelf(parent,parentId)
                 fragment.findNavController().navigate(action)
             } else {
+
                 val name = current.name
                 val desc = current.description
                 val id = current.id
@@ -84,12 +94,12 @@ class NoteListAdapter(
 
 
     companion object {
-        private val NOTES_COMPARATOR = object : DiffUtil.ItemCallback<NoteEntity>() {
-            override fun areItemsTheSame(oldItem: NoteEntity, newItem: NoteEntity): Boolean {
+        private val NOTES_COMPARATOR = object : DiffUtil.ItemCallback<NoteDao.NoteEntityWithCount>() {
+            override fun areItemsTheSame(oldItem: NoteDao.NoteEntityWithCount, newItem: NoteDao.NoteEntityWithCount): Boolean {
                 return oldItem === newItem
             }
 
-            override fun areContentsTheSame(oldItem: NoteEntity, newItem: NoteEntity): Boolean {
+            override fun areContentsTheSame(oldItem: NoteDao.NoteEntityWithCount, newItem: NoteDao.NoteEntityWithCount): Boolean {
                 return oldItem.name == newItem.name
             }
         }
@@ -101,3 +111,5 @@ class NoteListAdapter(
 interface NoteClickDeleteInterface {
     fun onDeleteIconClick(id: Int)
 }
+
+

@@ -9,7 +9,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import mamali.qa.notify.R
 
-@Database(entities = arrayOf(NoteEntity::class), version = 1, exportSchema = false)
+@Database(entities = arrayOf(NoteEntity::class),views =[NoteDao.NoteEntityWithCount::class], version = 1, exportSchema = false)
 abstract class NoteRoomDataBase : RoomDatabase() {
     abstract fun noteDao(): NoteDao
 

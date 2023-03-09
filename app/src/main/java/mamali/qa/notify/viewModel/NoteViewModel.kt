@@ -8,12 +8,14 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import mamali.qa.notify.ConvertDigitsToPersian.toPersianDigit
+import mamali.qa.notify.database.NoteDao
 import mamali.qa.notify.database.NoteEntity
 import mamali.qa.notify.repositories.NoteRepository
 
 class NoteViewModel(private val repository: NoteRepository) : ViewModel() {
 
-    var listLiveData: LiveData<List<NoteEntity>> = MutableLiveData(emptyList())
+    var listLiveData: LiveData<List<NoteDao.NoteEntityWithCount>> = MutableLiveData(emptyList())
 
     fun getNotes(parentId: Int? = -1) = viewModelScope.launch {
        listLiveData = repository.getNotes(parentId)
@@ -47,7 +49,7 @@ class NoteViewModel(private val repository: NoteRepository) : ViewModel() {
 
     fun updateToolbar(txtToolbar : TextView, imgBack : ImageView, imgOption : ImageView,parent: String?){
         if (parent!="root"){
-            txtToolbar.text=parent
+            txtToolbar.text=parent?.toPersianDigit()
             imgBack.visibility=View.VISIBLE
             imgOption.visibility=View.VISIBLE
         }

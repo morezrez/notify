@@ -37,7 +37,7 @@ class NoteDetailsFragment : Fragment() {
         val args = getArgs()
         name = args?.name.toString()
         desc = args?.desc.toString()
-        if (name != null && desc != null && name!= "null" && desc !="null") {
+        if (name != null && desc != null && name != "null" && desc != "null") {
             binding.edtNoteTitle.setText(name)
             binding.edtNoteDetail.setText(desc)
         }
@@ -57,9 +57,9 @@ class NoteDetailsFragment : Fragment() {
                 val parent = args?.parent
                 val parentId = args?.parentId
 
-                if (name != null && desc != null && parentId != null && name!= "null" && desc !="null") {
+                if (name != null && desc != null && parentId != null && name != "null" && desc != "null") {
                     noteDetailViewModel.updateNote(title, desc2, parentId)
-                } else if(binding.edtNoteTitle.text.isNotEmpty() && binding.edtNoteDetail.text.isNotEmpty()) {
+                } else if (binding.edtNoteTitle.text.isNotEmpty() && binding.edtNoteDetail.text.isNotEmpty()) {
                     parent?.let {
                         parentId?.let { it1 ->
                             noteDetailViewModel.getInput(
