@@ -4,6 +4,7 @@ import androidx.appcompat.widget.DecorContentParent
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -38,6 +39,10 @@ class NoteDetailViewModel(private val repository: NoteRepository) : ViewModel() 
         withContext(Dispatchers.IO) {
             repository.updateNote(name, desc, id,date)
         }
+    }
+
+    fun deleteNote(id: Int?) = CoroutineScope(Dispatchers.IO).launch {
+        repository.deleteNote(id)
     }
 
 }

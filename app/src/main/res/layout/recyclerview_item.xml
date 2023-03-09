@@ -42,7 +42,8 @@
             />
 
         <ImageView
-            android:padding="16dp"
+            android:paddingVertical="8dp"
+            android:paddingHorizontal="16dp"
             android:id="@+id/option_blub_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -69,6 +70,7 @@
 
 
         <TextView
+            android:padding="4dp"
             android:id="@+id/file_title_txt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

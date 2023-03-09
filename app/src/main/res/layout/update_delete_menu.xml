@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        app:cardCornerRadius="16dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:padding="4dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:id="@+id/linear_update">
+
+                <TextView
+                    android:textStyle="bold"
+                    android:textSize="12sp"
+                    android:fontFamily="@font/iraniansans"
+                    android:text="تغییر عنوان"
+                    android:layout_width="wrap_content"
+                    android:layout_height="56dp"
+                    android:gravity="center_vertical"
+                    android:minWidth="110dp"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp" />
+
+                <ImageView
+                    android:layout_margin="8dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/edit_vector"
+                    android:layout_gravity="center_vertical"/>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/gray_100"/>
+
+            <LinearLayout
+                android:padding="4dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:id="@+id/linear_delete">
+
+                <TextView
+                    android:textStyle="bold"
+                    android:textSize="12sp"
+                    android:fontFamily="@font/iraniansans"
+                    android:text="حذف کردن"
+                    android:layout_width="wrap_content"
+                    android:layout_height="56dp"
+                    android:gravity="center_vertical"
+                    android:minWidth="110dp"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp" />
+
+                <ImageView
+                    android:layout_margin="8dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/recycler_bin_vector"
+                    android:layout_gravity="center_vertical"/>
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+
+    </androidx.cardview.widget.CardView>
+
+
+
+</FrameLayout>

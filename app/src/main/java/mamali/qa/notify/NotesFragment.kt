@@ -1,11 +1,16 @@
 package mamali.qa.notify
 
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.PopupMenu
+import android.widget.PopupWindow
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -21,7 +26,7 @@ class NotesFragment : Fragment(), NoteClickDeleteInterface {
     private val noteViewModel: NoteViewModel by viewModels {
         NoteViewModelFactory((requireActivity().application as NotesApplication).repository)
     }
-
+    var popup: PopupWindow? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,19 +39,19 @@ class NotesFragment : Fragment(), NoteClickDeleteInterface {
             adapter = recyclerAdapter
             layoutManager = LinearLayoutManager(requireActivity())
         }
-        (binding.notesRecyclerView.getItemAnimator() as SimpleItemAnimator).supportsChangeAnimations = false
 
-//get arguments
+
+        //get arguments
         val bundle = arguments
         val args = bundle?.let { NotesFragmentArgs.fromBundle(it) }
         val parent = args?.parent
         val parentId = args?.parentId
         noteViewModel.getNotes(parentId)
-
+        //submit recycler view list
         noteViewModel.listLiveData.observe(requireActivity(), Observer { notes ->
-            notes?.let { recyclerAdapter.submitList(it) }
+            notes?.let { recyclerAdapter.submitList(it.reversed()) }
         })
-
+        //making difference in toolbar for root and inside folders
         noteViewModel.updateToolbar(
             binding.toolbarTitleTxt,
             binding.icBackToolbar,
@@ -65,7 +70,8 @@ class NotesFragment : Fragment(), NoteClickDeleteInterface {
             val action =
                 parentId?.let { it1 ->
                     NotesFragmentDirections.actionNotesFragmentToNoteDetailsFragment(
-                        it1, null,null,parent)
+                        it1, null, null, parent
+                    )
                 }
             action?.let { it1 -> findNavController().navigate(it1) }
         }
@@ -83,28 +89,44 @@ class NotesFragment : Fragment(), NoteClickDeleteInterface {
         }
 
         binding.toolbarOptionBlubIcon.setOnClickListener {
-            val popup = PopupMenu(context, binding.toolbarOptionBlubIcon)
-            popup.inflate(R.menu.delete_update_menu)
-            popup.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener { item: MenuItem? ->
-                when (item!!.itemId) {
-                    R.id.delete -> {
-                        noteViewModel.deleteNote(parentId)
-                        activity?.onBackPressed()
-                    }
-                    R.id.update -> {
-                        UpdateFileCustomDialog(parentId,binding.toolbarTitleTxt).show(requireActivity().supportFragmentManager, "myUpadteDialog")
-                    }
+
+            val popup2: PopupWindow = showPopUpUpdateAndDelete(this.requireContext())
+            popup2.contentView.apply {
+
+                findViewById<LinearLayout>(R.id.linear_delete).setOnClickListener {
+                    noteViewModel.deleteNote(parentId)
+                    activity?.onBackPressed()
+                    popup2.dismiss()
                 }
-                true
-            })
-            popup.show()
+
+                findViewById<LinearLayout>(R.id.linear_update).setOnClickListener {
+                    UpdateFileCustomDialog(parentId, binding.toolbarTitleTxt).show(
+                        requireActivity().supportFragmentManager,
+                        "myUpadteDialog"
+                    )
+                    popup2.dismiss()
+                }
+            }
+
+            popup2.isOutsideTouchable = true
+            popup2.isFocusable = true
+            popup2.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            popup2.showAsDropDown(binding.toolbarOptionBlubIcon)
         }
 
         return binding.root
     }
 
-    override fun onDeleteIconClick(id: Int) {
-        noteViewModel.deleteNote(id)
+    override fun onDeleteIconClick(id: Int, imgOptionBlub: ImageView) {
+        popup?.dismiss()
+        popup = showPopUpDelete(this.requireContext()) {
+            noteViewModel.deleteNote(id)
+            popup?.dismiss()
+        }
+        popup?.isOutsideTouchable = true
+        popup?.isFocusable
+        popup?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        popup?.showAsDropDown(imgOptionBlub)
     }
 
 

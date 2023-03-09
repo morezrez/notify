@@ -13,6 +13,7 @@
     <color name="toolbar_title_color">#20222A</color>
     <color name="floating_botton_color">#4D5DF2</color>
     <color name="gray_60">#9DA0AF</color>
+    <color name="gray_100">#F5F5F5</color>
     <color name="gray_200">#EEEEEE</color>
     <color name="gray_300">#E0E0E0</color>
     <color name="gray_600">#757575</color>
