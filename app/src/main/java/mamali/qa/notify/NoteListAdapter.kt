@@ -1,6 +1,5 @@
 package mamali.qa.notify
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,13 +12,14 @@ import androidx.recyclerview.widget.RecyclerView
 import mamali.qa.notify.utils.getRelativeTime
 import mamali.qa.notify.utils.toPersianDigit
 import mamali.qa.notify.database.NoteDao
+import mamali.qa.notify.models.NoteViewEntity
 import java.util.Date
 
 class NoteListAdapter(
     private val fragment: NotesFragment,
     private val noteClickDeleteInterface: NoteClickDeleteInterface
 ) :
-    ListAdapter<NoteDao.NoteEntityWithCount, NoteListAdapter.ViewHolder>(NOTES_COMPARATOR) {
+    ListAdapter<NoteViewEntity, NoteListAdapter.ViewHolder>(NOTES_COMPARATOR) {
 
     class ViewHolder(ItemView: View) : RecyclerView.ViewHolder(ItemView) {
         val txtFileTitle: TextView = ItemView.findViewById(R.id.file_title_txt)
@@ -86,17 +86,17 @@ class NoteListAdapter(
 
     companion object {
         private val NOTES_COMPARATOR =
-            object : DiffUtil.ItemCallback<NoteDao.NoteEntityWithCount>() {
+            object : DiffUtil.ItemCallback<NoteViewEntity>() {
                 override fun areItemsTheSame(
-                    oldItem: NoteDao.NoteEntityWithCount,
-                    newItem: NoteDao.NoteEntityWithCount
+                    oldItem: NoteViewEntity,
+                    newItem: NoteViewEntity
                 ): Boolean {
                     return oldItem.id == newItem.id
                 }
 
                 override fun areContentsTheSame(
-                    oldItem: NoteDao.NoteEntityWithCount,
-                    newItem: NoteDao.NoteEntityWithCount
+                    oldItem: NoteViewEntity,
+                    newItem: NoteViewEntity
                 ): Boolean {
                     return oldItem.name == newItem.name
                 }
