@@ -1,5 +1,6 @@
 package mamali.qa.notify
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,22 +15,19 @@ import mamali.qa.notify.utils.toPersianDigit
 import mamali.qa.notify.database.NoteDao
 import java.util.Date
 
-
 class NoteListAdapter(
-    val fragment: NotesFragment,
-    val noteClickDeleteInterface: NoteClickDeleteInterface
+    private val fragment: NotesFragment,
+    private val noteClickDeleteInterface: NoteClickDeleteInterface
 ) :
     ListAdapter<NoteDao.NoteEntityWithCount, NoteListAdapter.ViewHolder>(NOTES_COMPARATOR) {
 
-
-    inner class ViewHolder(ItemView: View) : RecyclerView.ViewHolder(ItemView) {
+    class ViewHolder(ItemView: View) : RecyclerView.ViewHolder(ItemView) {
         val txtFileTitle: TextView = ItemView.findViewById(R.id.file_title_txt)
         val txtFileDetail: TextView = ItemView.findViewById(R.id.file_detail_txt)
         val imgFileicon: ImageView = ItemView.findViewById(R.id.file_icon_vector)
         val imgFileHighlight: ImageView = ItemView.findViewById(R.id.file_icon_circle_highlight)
         val imgOptionBlubIcon: ImageView = ItemView.findViewById(R.id.option_blub_icon)
     }
-
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view =
@@ -55,11 +53,9 @@ class NoteListAdapter(
                 holder.txtFileDetail.text =
                     "حاوی " + current.children.toString().toPersianDigit() + " فایل"
             } else {
-                holder.txtFileDetail.text = "خالی"
+                holder.txtFileDetail.text =fragment.context?.getString(R.string.file_empty_txt)
             }
         }
-
-
 
         holder.txtFileTitle.setOnClickListener {
             if (current.kind == "file") {
@@ -83,12 +79,10 @@ class NoteListAdapter(
             }
         }
 
-
         holder.imgOptionBlubIcon.setOnClickListener {
             noteClickDeleteInterface.onDeleteIconClick(current.id, holder.imgOptionBlubIcon)
         }
     }
-
 
     companion object {
         private val NOTES_COMPARATOR =
@@ -109,13 +103,8 @@ class NoteListAdapter(
             }
     }
 
-
 }
 
 interface NoteClickDeleteInterface {
     fun onDeleteIconClick(id: Int, imgOptionBlub: ImageView)
 }
-
-
-
-

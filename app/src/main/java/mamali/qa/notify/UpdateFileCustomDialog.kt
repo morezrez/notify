@@ -9,10 +9,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import mamali.qa.notify.databinding.DialogAddFileBinding
 
-class UpdateFileCustomDialog(id : Int?,txtToolbar : TextView) : DialogFragment() {
-
-   val id=id
-    val txtToolbar=txtToolbar
+class UpdateFileCustomDialog(val id : Int?, private val txtToolbar : TextView) : DialogFragment() {
 
     private val noteViewModel: NoteViewModel by viewModels {
         NoteViewModelFactory((requireActivity().application as NotesApplication).repository)
@@ -23,12 +20,12 @@ class UpdateFileCustomDialog(id : Int?,txtToolbar : TextView) : DialogFragment()
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        getDialog()!!.getWindow()?.setBackgroundDrawableResource(R.drawable.dialog_frame);
+        dialog?.window?.setBackgroundDrawableResource(R.drawable.dialog_frame);
         val binding = DialogAddFileBinding.inflate(inflater, container, false)
 
-        binding.dialogTitle.text="تغییر عنوان"
-        binding.dialogSubtitle.text="عنوان جدید را وارد کنید"
-        binding.btnCreate.text="تغییر عنوان"
+        binding.dialogTitle.text= getString(R.string.dialig_update_title)
+        binding.dialogSubtitle.text=getString(R.string.dialog_update_subtitle)
+        binding.btnCreate.text=getString(R.string.dialog_update_btn_txt)
         binding.btnCreate.setOnClickListener {
            val name =  binding.edtFileTitle.text
             noteViewModel.updateFile(id,name.toString())
@@ -39,9 +36,6 @@ class UpdateFileCustomDialog(id : Int?,txtToolbar : TextView) : DialogFragment()
         binding.txtAddFileCancel.setOnClickListener {
             dialog?.dismiss()
         }
-
-
-
         return binding.root
     }
 
@@ -52,6 +46,4 @@ class UpdateFileCustomDialog(id : Int?,txtToolbar : TextView) : DialogFragment()
         dialog!!.window?.setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT)
 
     }
-
-
 }

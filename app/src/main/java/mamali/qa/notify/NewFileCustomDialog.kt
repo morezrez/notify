@@ -11,10 +11,7 @@ import mamali.qa.notify.databinding.DialogAddFileBinding
 
 //dialog for update and add new file handel here
 
-class NewFileCustomDialog(parent: String, parentId: Int?) : DialogFragment() {
-
-    val parent = parent
-    val parentId = parentId
+class NewFileCustomDialog( val parent: String,val parentId: Int?) : DialogFragment() {
 
     private val noteViewModel: NoteViewModel by viewModels {
         NoteViewModelFactory((requireActivity().application as NotesApplication).repository)
@@ -24,8 +21,8 @@ class NewFileCustomDialog(parent: String, parentId: Int?) : DialogFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        getDialog()!!.getWindow()?.setBackgroundDrawableResource(R.drawable.dialog_frame);
+    ): View {
+        dialog!!.window?.setBackgroundDrawableResource(R.drawable.dialog_frame);
         val binding = DialogAddFileBinding.inflate(inflater, container, false)
 
         binding.btnCreate.setOnClickListener {
@@ -47,7 +44,7 @@ class NewFileCustomDialog(parent: String, parentId: Int?) : DialogFragment() {
 
     }
 
-    fun addFileOnClick(binding: DialogAddFileBinding) {
+    private fun addFileOnClick(binding: DialogAddFileBinding) {
         val name = binding.edtFileTitle.text.toString()
         val kind = "file"
         val parent = parent
@@ -56,6 +53,4 @@ class NewFileCustomDialog(parent: String, parentId: Int?) : DialogFragment() {
         noteViewModel.insert(file)
         dialog?.dismiss()
     }
-
-
 }

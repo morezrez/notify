@@ -6,8 +6,6 @@ import java.util.*
         val jalaliDate = DateConverter().apply {
             gregorianToPersian(this@getFormatted)
         }
-
         // Format as yyyy/MM/dd
         return with(jalaliDate) { "$day $month $year" }
     }
-

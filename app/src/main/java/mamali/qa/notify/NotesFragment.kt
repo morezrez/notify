@@ -24,7 +24,6 @@ import mamali.qa.notify.utils.showPopUpUpdateAndDelete
 
 class NotesFragment : Fragment(), NoteClickDeleteInterface {
 
-
     private val noteViewModel: NoteViewModel by viewModels {
         NoteViewModelFactory((requireActivity().application as NotesApplication).repository)
     }
@@ -41,7 +40,6 @@ class NotesFragment : Fragment(), NoteClickDeleteInterface {
             adapter = recyclerAdapter
             layoutManager = LinearLayoutManager(requireActivity())
         }
-
 
         //get arguments
         val bundle = arguments
@@ -98,7 +96,7 @@ class NotesFragment : Fragment(), NoteClickDeleteInterface {
                 findViewById<LinearLayout>(R.id.linear_delete).setOnClickListener {
                     noteViewModel.deleteNote(parentId)
                     activity?.onBackPressed()
-                    popup2?.dismiss()
+                    popup2.dismiss()
                 }
 
                 findViewById<LinearLayout>(R.id.linear_update).setOnClickListener {
@@ -130,6 +128,4 @@ class NotesFragment : Fragment(), NoteClickDeleteInterface {
         popup?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         popup?.showAsDropDown(imgOptionBlub)
     }
-
-
 }
