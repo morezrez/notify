@@ -1,4 +1,4 @@
-package mamali.qa.notify.Utils
+package mamali.qa.notify.utils
 
 fun String.toPersianDigit(): String {
     var result = ""

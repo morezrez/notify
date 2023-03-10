@@ -1,4 +1,4 @@
-package mamali.qa.notify.Utils
+package mamali.qa.notify.utils
 
 import android.text.format.DateUtils
 import java.util.*
