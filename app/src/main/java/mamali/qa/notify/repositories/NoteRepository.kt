@@ -6,7 +6,6 @@ import mamali.qa.notify.models.NoteEntity
 class NoteRepository(private val noteDao: NoteDao) {
 
     fun getNotes(parentId: Int?) = noteDao.getNotes(parentId)
-    fun getSelectedNote(id: Int) = noteDao.getSelectedNotes(id)
     fun deleteNote(id: Int?) = noteDao.deleteNote(id)
     suspend fun insert(noteEntity: NoteEntity) = noteDao.insert(noteEntity)
     fun updateNote(name: String, desc: String, id: Int, date: Long) =

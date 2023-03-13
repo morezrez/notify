@@ -10,9 +10,6 @@ interface NoteDao {
     @Query("SELECT * FROM note_view_table WHERE parent_id=:parentId")
     fun getNotes(parentId: Int?): LiveData<List<NoteViewEntity>>
 
-    @Query("SELECT * FROM note_table WHERE id= :id")
-    fun getSelectedNotes(id: Int): LiveData<List<NoteEntity>>
-
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(note: NoteEntity)
 

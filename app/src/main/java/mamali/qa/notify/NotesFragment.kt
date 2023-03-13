@@ -6,9 +6,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Adapter
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.PopupWindow
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -28,6 +30,7 @@ class NotesFragment : Fragment(), NoteClickDeleteInterface {
     }
     var popup: PopupWindow? = null
     private lateinit var binding: FragmentNotesBinding
+    private lateinit var recyclerAdapter: NoteListAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,7 +43,7 @@ class NotesFragment : Fragment(), NoteClickDeleteInterface {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val recyclerAdapter = NoteListAdapter(this, this)
+        recyclerAdapter = NoteListAdapter(this, this)
         binding.notesRecyclerView.apply {
             adapter = recyclerAdapter
             layoutManager = LinearLayoutManager(requireActivity())
@@ -51,10 +54,9 @@ class NotesFragment : Fragment(), NoteClickDeleteInterface {
         val parent = args?.parent.toString()
         val parentId = args?.parentId!!
         noteViewModel.getNotes(parentId)
-        //submit recycler view list
-        noteViewModel.listLiveData.observe(requireActivity(), Observer { notes ->
-            notes?.let { recyclerAdapter.submitList(it.reversed()) }
-        })
+
+        registerObserver()
+
         //making difference in toolbar for root and inside folders
         updateToolbar(parent)
 
@@ -92,10 +94,7 @@ class NotesFragment : Fragment(), NoteClickDeleteInterface {
     }
 
     private fun btnFloatingAddClicked() {
-        noteViewModel.addFloatingButtonOnClick(
-            binding.btnFloatingAddFile,
-            binding.btnFloatingAddNote
-        )
+        noteViewModel.addFloatingButtonOnClick()
     }
 
     private fun btnFloatingAddNoteClicked(parentId: Int, parent: String) {
@@ -147,5 +146,17 @@ class NotesFragment : Fragment(), NoteClickDeleteInterface {
             binding.toolbarOptionBlubIcon,
             parent
         )
+    }
+
+    private fun registerObserver() {
+        //submit recycler view list
+        noteViewModel.listLiveData.observe(viewLifecycleOwner, Observer { notes ->
+            notes?.let { recyclerAdapter.submitList(it.reversed()) }
+        })
+        //observe visibility of floating buttons
+        noteViewModel.floatingButtonVisibilityLiveData.observe(viewLifecycleOwner) { isVisible ->
+            binding.btnFloatingAddNote.isVisible = isVisible
+            binding.btnFloatingAddFile.isVisible = isVisible
+        }
     }
 }
