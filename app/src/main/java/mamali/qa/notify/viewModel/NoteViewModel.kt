@@ -22,16 +22,22 @@ class NoteViewModel(private val repository: NoteRepository) : ViewModel() {
        listLiveData = repository.getNotes(parentId)
     }
 
-    fun insert(note: NoteEntity) = viewModelScope.launch {
-        repository.insert(note)
+    fun insert(note: NoteEntity) {
+        viewModelScope.launch {
+            repository.insert(note)
+        }
     }
 
-    fun deleteNote(id: Int?) = CoroutineScope(Dispatchers.IO).launch {
-        repository.deleteNote(id)
+    fun deleteNote(id: Int?) {
+        viewModelScope.launch {
+            repository.deleteNote(id)
+        }
     }
 
-    fun updateFile(id: Int?, name: String)= CoroutineScope(Dispatchers.IO).launch {
-        repository.updateFile(id,name)
+    fun updateFile(id: Int?, name: String){
+        viewModelScope.launch {
+            repository.updateFile(id,name)
+        }
     }
 
     fun addFloatingButtonOnClick() {
