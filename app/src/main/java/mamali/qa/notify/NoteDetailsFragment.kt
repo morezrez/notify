@@ -15,6 +15,7 @@ import androidx.fragment.app.viewModels
 import mamali.qa.notify.utils.getFormatted
 import mamali.qa.notify.utils.toPersianDigit
 import mamali.qa.notify.databinding.FragmentNoteDetailsBinding
+import mamali.qa.notify.models.Kind
 import mamali.qa.notify.utils.showPopUpDelete
 import mamali.qa.notify.viewModel.NoteDetailViewModel
 import mamali.qa.notify.viewModel.NoteDetailViewModelFactory
@@ -93,7 +94,7 @@ class NoteDetailsFragment : Fragment() {
 
                 title = binding.edtNoteTitle.text.toString()
                 desc2 = binding.edtNoteDetail.text.toString()
-                val kind = "Note"
+                val kind = Kind.Note
                 val args = getArgs()
                 val parent = args?.parent
                 val parentId = args?.parentId
@@ -127,7 +128,7 @@ class NoteDetailsFragment : Fragment() {
     }
 
 
-    fun insertNote(parent : String,parentId: Int,kind : String){
+    fun insertNote(parent : String,parentId: Int,kind : Kind){
         parent.let {
             parentId.let { it1 ->
                 noteDetailViewModel.getInput(

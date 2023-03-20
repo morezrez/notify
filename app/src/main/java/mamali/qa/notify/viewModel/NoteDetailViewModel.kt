@@ -7,6 +7,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import mamali.qa.notify.models.Kind
 import mamali.qa.notify.models.NoteEntity
 import mamali.qa.notify.repositories.NoteRepository
 
@@ -23,7 +24,7 @@ class NoteDetailViewModel(private val repository: NoteRepository) : ViewModel() 
     fun getInput(
         title: String,
         desc: String,
-        kind: String,
+        kind: Kind,
         parent: String,
         parentId: Int,
         date: Long
