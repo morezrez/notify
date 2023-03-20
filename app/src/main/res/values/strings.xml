@@ -12,4 +12,6 @@
     <string name="dialog_update_btn_txt">تغییر عنوان</string>
     <string name="file_empty_txt">خالی</string>
     <string name="insert_empty_note_toast">هنوز یادداشتی ذخیره نشده است</string>
+    <string name="updateWithoutChange">تغییری در فایل داده نشد.</string>
+    <string name="updateEmptyTitle">عنوان نمیتواند خالی باشد.</string>
 </resources>
