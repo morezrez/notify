@@ -14,6 +14,8 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.NavDirections
+import androidx.navigation.Navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import mamali.qa.notify.databinding.FragmentNotesBinding
@@ -23,7 +25,7 @@ import mamali.qa.notify.utils.showPopUpDelete
 import mamali.qa.notify.utils.showPopUpUpdateAndDelete
 
 
-class NotesFragment : Fragment(), NoteClickDeleteInterface {
+class NotesFragment : Fragment(), AdapterCommunicatorInterface {
 
     private val noteViewModel: NoteViewModel by viewModels {
         NoteViewModelFactory((requireActivity().application as NotesApplication).repository)
@@ -43,7 +45,7 @@ class NotesFragment : Fragment(), NoteClickDeleteInterface {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        recyclerAdapter = NoteListAdapter(this, this)
+        recyclerAdapter = NoteListAdapter(this)
         binding.notesRecyclerView.apply {
             adapter = recyclerAdapter
             layoutManager = LinearLayoutManager(requireActivity())
@@ -91,6 +93,21 @@ class NotesFragment : Fragment(), NoteClickDeleteInterface {
         popup?.isFocusable
         popup?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         popup?.showAsDropDown(imgOptionBlub)
+    }
+
+    override fun fragmentTransferFile(parent: String, parentId: Int) {
+        val action = NotesFragmentDirections.actionNotesFragmentSelf(parent, parentId)
+        findNavController().navigate(action)
+    }
+
+    override fun fragmentTransferNote(id: Int, name: String, desc: String?, parent: String) {
+        val action = NotesFragmentDirections.actionNotesFragmentToNoteDetailsFragment(
+            id,
+            name,
+            desc,
+            parent
+        )
+        findNavController().navigate(action)
     }
 
     private fun btnFloatingAddClicked() {
@@ -159,4 +176,8 @@ class NotesFragment : Fragment(), NoteClickDeleteInterface {
             binding.btnFloatingAddFile.isVisible = isVisible
         }
     }
+
+
 }
+
+
