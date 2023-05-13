@@ -2,6 +2,9 @@ package mamali.qa.notify.data.database
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import dagger.hilt.EntryPoint
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import mamali.qa.notify.models.NoteEntity
 import mamali.qa.notify.models.NoteViewEntity
 

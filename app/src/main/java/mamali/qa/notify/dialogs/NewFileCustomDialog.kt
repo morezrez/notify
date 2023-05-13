@@ -6,21 +6,21 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
+import dagger.hilt.android.AndroidEntryPoint
 import mamali.qa.notify.NoteViewModel
-import mamali.qa.notify.NoteViewModelFactory
 import mamali.qa.notify.NotesApplication
 import mamali.qa.notify.R
 import mamali.qa.notify.models.NoteEntity
 import mamali.qa.notify.databinding.DialogAddFileBinding
 import mamali.qa.notify.models.Kind
+import mamali.qa.notify.ui.NotesFragment
 
 //dialog for update and add new file handel here
+@AndroidEntryPoint
+class NewFileCustomDialog(val parent: String?, val parentId: Int?,
+                          val insertFile: (note: NoteEntity) -> Unit) : DialogFragment() {
 
-class NewFileCustomDialog(val parent: String, val parentId: Int?) : DialogFragment() {
-
-    private val noteViewModel: NoteViewModel by viewModels {
-        NoteViewModelFactory((requireActivity().application as NotesApplication).repository)
-    }
+    private val noteViewModel: NoteViewModel by viewModels()
 
     private lateinit var binding: DialogAddFileBinding
 
@@ -52,13 +52,18 @@ class NewFileCustomDialog(val parent: String, val parentId: Int?) : DialogFragme
         dialog!!.window?.setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT)
     }
 
-    private fun addFileOnClick(binding: DialogAddFileBinding) {
+     fun addFileOnClick(binding: DialogAddFileBinding) {
         val name = binding.edtFileTitle.text.toString()
         val kind = Kind.File
         val parent = parent
         val parentId = parentId
         val file = NoteEntity(name, null, kind, parent, parentId)
-        noteViewModel.insert(file)
-        dialog?.dismiss()
+        //noteViewModel.insert(file)
+         insertFile(file)
+         dialog?.dismiss()
     }
+
+
+
+
 }

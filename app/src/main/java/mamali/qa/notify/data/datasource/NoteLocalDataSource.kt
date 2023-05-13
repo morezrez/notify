@@ -4,8 +4,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import mamali.qa.notify.data.database.NoteDao
 import mamali.qa.notify.models.NoteEntity
+import javax.inject.Inject
 
-class NoteLocalDataSource(private val noteDao: NoteDao) : DataSource {
+class NoteLocalDataSource @Inject constructor(private val noteDao: NoteDao) : DataSource {
 
     override fun getNotes(parentId: Int?) =
         noteDao.getNotes(parentId)

@@ -1,4 +1,4 @@
-package mamali.qa.notify
+package mamali.qa.notify.ui
 
 import android.content.Context
 import android.graphics.Color
@@ -12,23 +12,23 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import dagger.hilt.android.AndroidEntryPoint
+import mamali.qa.notify.NotesApplication
+import mamali.qa.notify.R
 import mamali.qa.notify.utils.getFormatted
 import mamali.qa.notify.utils.toPersianDigit
 import mamali.qa.notify.databinding.FragmentNoteDetailsBinding
 import mamali.qa.notify.models.Kind
 import mamali.qa.notify.utils.showPopUpDelete
 import mamali.qa.notify.viewModel.NoteDetailViewModel
-import mamali.qa.notify.viewModel.NoteDetailViewModelFactory
 import java.util.Date
 
 @Suppress("SENSELESS_COMPARISON")
-
+@AndroidEntryPoint
 class NoteDetailsFragment : Fragment() {
     lateinit var binding: FragmentNoteDetailsBinding
 
-    private val noteDetailViewModel: NoteDetailViewModel by viewModels {
-        NoteDetailViewModelFactory((requireActivity().application as NotesApplication).repository)
-    }
+    private val noteDetailViewModel: NoteDetailViewModel by viewModels()
 
     lateinit var name: String
     lateinit var desc: String
