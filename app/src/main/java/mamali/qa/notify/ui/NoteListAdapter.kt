@@ -1,99 +1,135 @@
 package mamali.qa.notify
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.navigation.NavDirections
-import androidx.navigation.fragment.findNavController
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import mamali.qa.notify.models.Kind
 import mamali.qa.notify.utils.getRelativeTime
 import mamali.qa.notify.utils.toPersianDigit
-import mamali.qa.notify.models.NoteViewEntity
+import mamali.qa.notify.models.RecyclerDataModel
 import java.util.Date
 
 class NoteListAdapter(private val adapterCommunicatorInterface: AdapterCommunicatorInterface) :
-    ListAdapter<NoteViewEntity, NoteListAdapter.ViewHolder>(NOTES_COMPARATOR) {
+    ListAdapter<RecyclerDataModel, NoteListAdapter.ViewHolder>(NOTES_COMPARATOR) {
 
-    class ViewHolder(ItemView: View) : RecyclerView.ViewHolder(ItemView) {
-        val txtFileTitle: TextView = ItemView.findViewById(R.id.file_title_txt)
-        val txtFileDetail: TextView = ItemView.findViewById(R.id.file_detail_txt)
-        val imgFileicon: ImageView = ItemView.findViewById(R.id.file_icon_vector)
-        val imgFileHighlight: ImageView = ItemView.findViewById(R.id.file_icon_circle_highlight)
-        val imgOptionBlubIcon: ImageView = ItemView.findViewById(R.id.option_blub_icon)
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+
+        val layout = when (viewType) {
+            TYPE_RECYCLER_VIEW_ITEM -> R.layout.recyclerview_item
+            TYPE_RECYCLER_VIEW_ITEM_DEVIDER -> R.layout.recyclerview_item_devider
+            else -> throw IllegalArgumentException("Invalid view type")
+        }
+
         val view =
-            LayoutInflater.from(parent.context).inflate(R.layout.recyclerview_item, parent, false)
+            LayoutInflater.from(parent.context)
+                .inflate(layout, parent, false)
         return ViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.bind(getItem(position))
+    }
 
-        val current = getItem(position)
 
-        holder.txtFileTitle.text = current.name.toPersianDigit()
+    override fun getItemViewType(position: Int): Int {
+        return when (getItem(position)) {
+            is RecyclerDataModel.NoteItem -> TYPE_RECYCLER_VIEW_ITEM
+            is RecyclerDataModel.Devider -> TYPE_RECYCLER_VIEW_ITEM_DEVIDER
 
-        if (current.kind == Kind.Note) {
-            holder.apply {
-                imgFileHighlight.setImageResource(R.drawable.note_icon_circle_highlight)
-                imgFileicon.setImageResource(R.drawable.note_icon_vector)
-                val lastDate = Date(current.date ?: 0L).getRelativeTime()
-                txtFileDetail.text = lastDate.toPersianDigit()
-            }
-        } else {
-            if (current.children != null) {
-                holder.txtFileDetail.text =
-                    "حاوی " + current.children.toString().toPersianDigit() + " فایل"
-            } else {
-                holder.txtFileDetail.text =
-                    holder.txtFileDetail.context.getString(R.string.file_empty_txt)
-            }
         }
 
-        holder.txtFileTitle.setOnClickListener {
-            if (current.kind == Kind.File) {
-                val parent = current.name
-                val parentId = current.id
-                adapterCommunicatorInterface.fragmentTransferFile(parent, parentId)
-            } else {
-                val name = current.name
-                val desc = current.description
-                val id = current.id
-                val parent = current.parent
-                adapterCommunicatorInterface.fragmentTransferNote(id,name,desc,parent)
-            }
-        }
-
-        holder.imgOptionBlubIcon.setOnClickListener {
-            adapterCommunicatorInterface.onDeleteIconClick(current.id, holder.imgOptionBlubIcon)
-        }
     }
 
     companion object {
         private val NOTES_COMPARATOR =
-            object : DiffUtil.ItemCallback<NoteViewEntity>() {
+            object : DiffUtil.ItemCallback<RecyclerDataModel>() {
                 override fun areItemsTheSame(
-                    oldItem: NoteViewEntity,
-                    newItem: NoteViewEntity
+                    oldItem: RecyclerDataModel,
+                    newItem: RecyclerDataModel
                 ): Boolean {
-                    return oldItem.id == newItem.id
+                    return oldItem == newItem
                 }
 
                 override fun areContentsTheSame(
-                    oldItem: NoteViewEntity,
-                    newItem: NoteViewEntity
+                    oldItem: RecyclerDataModel,
+                    newItem: RecyclerDataModel
                 ): Boolean {
-                    return oldItem.name == newItem.name
+                    return oldItem == newItem
                 }
             }
+
+        private const val TYPE_RECYCLER_VIEW_ITEM = 0
+        private const val TYPE_RECYCLER_VIEW_ITEM_DEVIDER = 1
     }
 
+    inner class ViewHolder(ItemView: View) : RecyclerView.ViewHolder(ItemView) {
+
+
+        fun bindNoteItem(item: RecyclerDataModel.NoteItem) {
+             val txtFileTitle: TextView = itemView.findViewById(R.id.file_title_txt)
+             val txtFileDetail: TextView = itemView.findViewById(R.id.file_detail_txt)
+             val imgFileicon: ImageView = itemView.findViewById(R.id.file_icon_vector)
+             val imgFileHighlight: ImageView = itemView.findViewById(R.id.file_icon_circle_highlight)
+             val imgOptionBlubIcon: ImageView = itemView.findViewById(R.id.option_blub_icon)
+
+            txtFileTitle.text = item.name.toPersianDigit()
+
+            if (item.kind == Kind.Note) {
+
+                imgFileHighlight.setImageResource(R.drawable.note_icon_circle_highlight)
+                imgFileicon.setImageResource(R.drawable.note_icon_vector)
+                val lastDate = Date(item.date ?: 0L).getRelativeTime()
+                txtFileDetail.text = lastDate.toPersianDigit()
+
+            } else {
+                if (item.children != null) {
+                    txtFileDetail.text =
+                        "حاوی " + item.children.toString().toPersianDigit() + " فایل"
+                } else {
+                    txtFileDetail.text =
+                        txtFileDetail.context.getString(R.string.file_empty_txt)
+                }
+            }
+
+            txtFileTitle.setOnClickListener {
+                if (item.kind == Kind.File) {
+                    val parent = item.name
+                    val parentId = item.id
+                    adapterCommunicatorInterface.fragmentTransferFile(parent, parentId)
+                } else {
+                    val name = item.name
+                    val desc = item.description
+                    val id = item.id
+                    val parent = item.parent
+                    adapterCommunicatorInterface.fragmentTransferNote(id, name, desc, parent)
+                }
+            }
+
+            imgOptionBlubIcon.setOnClickListener {
+                adapterCommunicatorInterface.onDeleteIconClick(item.id, imgOptionBlubIcon)
+            }
+        }
+
+        fun bindNoteItemDevider(item: RecyclerDataModel.Devider) {
+            val devider: View = itemView.findViewById(R.id.devider)
+            devider.setBackgroundColor(item.bgColor)
+        }
+
+        fun bind(dataModel: RecyclerDataModel) {
+            when (dataModel) {
+                is RecyclerDataModel.NoteItem -> bindNoteItem(dataModel)
+                is RecyclerDataModel.Devider -> bindNoteItemDevider(dataModel)
+            }
+        }
+    }
 }
 
 interface AdapterCommunicatorInterface {

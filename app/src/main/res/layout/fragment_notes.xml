@@ -67,6 +67,7 @@
         android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar"
         app:layout_constraintVertical_bias="1.0" />
@@ -130,4 +131,16 @@
         app:tint="@null"
         app:fabCustomSize="50dp"
         />
+
+    <TextView
+        android:visibility="invisible"
+        android:id="@+id/txt_empty_state"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="هنوز یادداشتی وجود ندارد 😞"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/notes_recycler_view"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        android:fontFamily="@font/iraniansans"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

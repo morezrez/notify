@@ -3,6 +3,7 @@ package mamali.qa.notify.ui
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,7 +21,7 @@ import mamali.qa.notify.*
 import mamali.qa.notify.databinding.FragmentNotesBinding
 import mamali.qa.notify.dialogs.NewFileCustomDialog
 import mamali.qa.notify.dialogs.UpdateFileCustomDialog
-import mamali.qa.notify.models.NoteEntity
+import mamali.qa.notify.models.RecyclerDataModel
 import mamali.qa.notify.utils.showPopUpDelete
 import mamali.qa.notify.utils.showPopUpUpdateAndDelete
 
@@ -123,7 +124,10 @@ class NotesFragment : Fragment(), AdapterCommunicatorInterface {
     }
 
     private fun btnFloatingAddFileClicked(parentId: Int, parent: String) {
-        NewFileCustomDialog(parent.toString(), parentId){note->noteViewModel.insert(note)}.show(
+        NewFileCustomDialog(
+            parent.toString(),
+            parentId
+        ) { note -> noteViewModel.insert(note) }.show(
             requireActivity().supportFragmentManager,
             "MyCustomFragment"
         )
@@ -140,7 +144,10 @@ class NotesFragment : Fragment(), AdapterCommunicatorInterface {
             }
 
             findViewById<LinearLayout>(R.id.linear_update).setOnClickListener {
-                UpdateFileCustomDialog(parentId, binding.toolbarTitleTxt){id: Int?, name: String -> noteViewModel.updateFile(id,name) }.show(
+                UpdateFileCustomDialog(
+                    parentId,
+                    binding.toolbarTitleTxt
+                ) { id: Int?, name: String -> noteViewModel.updateFile(id, name) }.show(
                     requireActivity().supportFragmentManager,
                     "myUpadteDialog"
                 )
@@ -166,12 +173,37 @@ class NotesFragment : Fragment(), AdapterCommunicatorInterface {
     private fun registerObserver() {
         //submit recycler view list
         noteViewModel.listLiveData.observe(viewLifecycleOwner, Observer { notes ->
-            notes?.let { recyclerAdapter.submitList(it.reversed()) }
+            val noteItemsList: List<RecyclerDataModel> = notes.map {
+                with(it) {
+                    RecyclerDataModel.NoteItem(
+                        name,
+                        description,
+                        kind,
+                        parent,
+                        parent_id,
+                        date,
+                        children,
+                        id
+                    )
+                }
+            }
+            val recyclerList: MutableList<RecyclerDataModel> = mutableListOf()
+            for (item in noteItemsList) {
+                recyclerList.add(item)
+                recyclerList.add(RecyclerDataModel.Devider(resources.getColor(R.color.gray_300)))
+            }
+
+            recyclerList?.let { recyclerAdapter.submitList(it.reversed()) }
+            if (recyclerList.isEmpty()){binding.txtEmptyState.isVisible=true}
         })
+
         //observe visibility of floating buttons
         noteViewModel.floatingButtonVisibilityLiveData.observe(viewLifecycleOwner) { isVisible ->
             binding.btnFloatingAddNote.isVisible = isVisible
             binding.btnFloatingAddFile.isVisible = isVisible
         }
     }
+
+
+    private fun getData(): List<RecyclerDataModel> = listOf()
 }
