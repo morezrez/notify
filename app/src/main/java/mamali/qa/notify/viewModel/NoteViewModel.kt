@@ -1,19 +1,16 @@
 package mamali.qa.notify
 
 import android.view.View
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.lifecycle.*
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import mamali.qa.notify.utils.toPersianDigit
-import mamali.qa.notify.database.NoteDao
 import mamali.qa.notify.models.NoteEntity
 import mamali.qa.notify.models.NoteViewEntity
-import mamali.qa.notify.repositories.NoteRepository
+import mamali.qa.notify.data.repositories.NoteRepository
 
 class NoteViewModel(private val repository: NoteRepository) : ViewModel() {
 

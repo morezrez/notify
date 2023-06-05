@@ -1,4 +1,4 @@
-package mamali.qa.notify.database
+package mamali.qa.notify.data.database
 
 import androidx.lifecycle.LiveData
 import androidx.room.*

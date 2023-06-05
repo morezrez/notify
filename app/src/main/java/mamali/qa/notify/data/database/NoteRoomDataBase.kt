@@ -1,4 +1,4 @@
-package mamali.qa.notify.database
+package mamali.qa.notify.data.database
 
 import android.content.Context
 import androidx.room.Database

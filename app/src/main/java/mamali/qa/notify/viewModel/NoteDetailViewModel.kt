@@ -9,7 +9,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import mamali.qa.notify.models.Kind
 import mamali.qa.notify.models.NoteEntity
-import mamali.qa.notify.repositories.NoteRepository
+import mamali.qa.notify.data.repositories.NoteRepository
 
 class NoteDetailViewModel(private val repository: NoteRepository) : ViewModel() {
 
