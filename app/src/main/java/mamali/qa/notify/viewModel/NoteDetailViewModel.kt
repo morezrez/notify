@@ -1,6 +1,5 @@
 package mamali.qa.notify.viewModel
 
-import androidx.appcompat.widget.DecorContentParent
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -8,9 +7,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import mamali.qa.notify.NoteViewModel
-import mamali.qa.notify.database.NoteEntity
-import mamali.qa.notify.databinding.FragmentNoteDetailsBinding
+import mamali.qa.notify.models.NoteEntity
 import mamali.qa.notify.repositories.NoteRepository
 
 class NoteDetailViewModel(private val repository: NoteRepository) : ViewModel() {

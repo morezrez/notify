@@ -6,10 +6,10 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
-import mamali.qa.notify.R
+import mamali.qa.notify.models.NoteEntity
+import mamali.qa.notify.models.NoteViewEntity
 
-@Database(entities = arrayOf(NoteEntity::class),views =[NoteDao.NoteEntityWithCount::class], version = 1, exportSchema = false)
+@Database(entities = [NoteEntity::class],views =[NoteViewEntity::class], version = 1, exportSchema = false)
 abstract class NoteRoomDataBase : RoomDatabase() {
     abstract fun noteDao(): NoteDao
 

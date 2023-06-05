@@ -2,25 +2,13 @@ package mamali.qa.notify.database
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import androidx.sqlite.db.SimpleSQLiteQuery
-import androidx.sqlite.db.SupportSQLiteQuery
+import mamali.qa.notify.models.NoteEntity
+import mamali.qa.notify.models.NoteViewEntity
 
 @Dao
 interface NoteDao {
-    @DatabaseView("select * from (select * from note_table left join (SELECT parent_id, count(*) as children FROM note_table  group by parent_id) as subquery on note_table.id == subquery.parent_id) as note_table")
-    data class NoteEntityWithCount(
-        val name: String,
-        val description: String?,
-        val kind: String,
-        val parent: String,
-        val parent_id: Int,
-        val date: Long?=null,
-        val children: Int?,
-        val id: Int
-    )
-
-    @Query("SELECT * FROM noteentitywithcount WHERE parent_id=:parentId")
-    fun getNotes(parentId: Int?): LiveData<List<NoteEntityWithCount>>
+    @Query("SELECT * FROM note_view_table WHERE parent_id=:parentId")
+    fun getNotes(parentId: Int?): LiveData<List<NoteViewEntity>>
 
     @Query("SELECT * FROM note_table WHERE id= :id")
     fun getSelectedNotes(id: Int): LiveData<List<NoteEntity>>

@@ -1,4 +1,4 @@
-package mamali.qa.notify.database
+package mamali.qa.notify.models
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

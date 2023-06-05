@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
-import mamali.qa.notify.database.NoteEntity
+import mamali.qa.notify.models.NoteEntity
 import mamali.qa.notify.databinding.DialogAddFileBinding
 
 //dialog for update and add new file handel here

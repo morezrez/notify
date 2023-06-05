@@ -1,7 +1,7 @@
 package mamali.qa.notify.repositories
 
 import mamali.qa.notify.database.NoteDao
-import mamali.qa.notify.database.NoteEntity
+import mamali.qa.notify.models.NoteEntity
 
 class NoteRepository(private val noteDao: NoteDao) {
 
