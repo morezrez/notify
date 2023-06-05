@@ -1,4 +1,4 @@
-package mamali.qa.notify
+package mamali.qa.notify.dialogs
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,13 +7,19 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
+import mamali.qa.notify.NoteViewModel
+import mamali.qa.notify.NoteViewModelFactory
+import mamali.qa.notify.NotesApplication
+import mamali.qa.notify.R
 import mamali.qa.notify.databinding.DialogAddFileBinding
 
-class UpdateFileCustomDialog(val id : Int?, private val txtToolbar : TextView) : DialogFragment() {
+class UpdateFileCustomDialog(val id: Int?, private val txtToolbar: TextView) : DialogFragment() {
 
     private val noteViewModel: NoteViewModel by viewModels {
         NoteViewModelFactory((requireActivity().application as NotesApplication).repository)
     }
+
+    private lateinit var binding: DialogAddFileBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -21,22 +27,24 @@ class UpdateFileCustomDialog(val id : Int?, private val txtToolbar : TextView) :
         savedInstanceState: Bundle?
     ): View? {
         dialog?.window?.setBackgroundDrawableResource(R.drawable.dialog_frame);
-        val binding = DialogAddFileBinding.inflate(inflater, container, false)
+        binding = DialogAddFileBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
-        binding.dialogTitle.text= getString(R.string.dialig_update_title)
-        binding.dialogSubtitle.text=getString(R.string.dialog_update_subtitle)
-        binding.btnCreate.text=getString(R.string.dialog_update_btn_txt)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.dialogTitle.text = getString(R.string.dialig_update_title)
+        binding.dialogSubtitle.text = getString(R.string.dialog_update_subtitle)
+        binding.btnCreate.text = getString(R.string.dialog_update_btn_txt)
         binding.btnCreate.setOnClickListener {
-           val name =  binding.edtFileTitle.text
-            noteViewModel.updateFile(id,name.toString())
-            txtToolbar.text=name
+            val name = binding.edtFileTitle.text
+            noteViewModel.updateFile(id, name.toString())
+            txtToolbar.text = name
             dialog?.dismiss()
         }
-
         binding.txtAddFileCancel.setOnClickListener {
             dialog?.dismiss()
         }
-        return binding.root
     }
 
     override fun onStart() {

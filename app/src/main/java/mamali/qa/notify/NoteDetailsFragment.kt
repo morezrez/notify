@@ -43,6 +43,11 @@ class NoteDetailsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentNoteDetailsBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         //get arguments
         val args = getArgs()
@@ -78,9 +83,6 @@ class NoteDetailsFragment : Fragment() {
                 Toast.makeText(context, getString(R.string.insert_empty_note_toast), Toast.LENGTH_SHORT).show()
             }
         }
-
-
-        return binding.root
     }
 
     //when user click on back button
@@ -97,18 +99,11 @@ class NoteDetailsFragment : Fragment() {
                 val parentId = args?.parentId
                 //for notes that already exist
                 if (name != null && desc != null && parentId != null && name != "null" && desc != "null") {
-                    noteDetailViewModel.updateNote(title, desc2, parentId, dateUTC)
+                    updateNote(parentId)
                 }
                 //for new note
                 else if (binding.edtNoteTitle.text.isNotEmpty() && binding.edtNoteDetail.text.isNotEmpty()) {
-                    parent?.let {
-                        parentId?.let { it1 ->
-                            noteDetailViewModel.getInput(
-                                title, desc2, kind, it,
-                                it1, dateUTC
-                            )
-                        }
-                    }
+                    insertNote(parent!!,parentId!!,kind)
                 }
                 super.remove()
                 requireActivity().onBackPressed()
@@ -124,7 +119,22 @@ class NoteDetailsFragment : Fragment() {
     fun getArgs(): NoteDetailsFragmentArgs? {
         val bundle = arguments
         val args = bundle?.let { NoteDetailsFragmentArgs.fromBundle(it) }
-
         return args
+    }
+
+    fun updateNote(parentId : Int){
+        noteDetailViewModel.updateNote(title, desc2, parentId, dateUTC)
+    }
+
+
+    fun insertNote(parent : String,parentId: Int,kind : String){
+        parent.let {
+            parentId.let { it1 ->
+                noteDetailViewModel.getInput(
+                    title, desc2, kind, it,
+                    it1, dateUTC
+                )
+            }
+        }
     }
 }
