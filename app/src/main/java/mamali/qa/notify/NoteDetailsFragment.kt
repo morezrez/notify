@@ -81,7 +81,11 @@ class NoteDetailsFragment : Fragment() {
                 popup?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
                 popup?.showAsDropDown(binding.optionBlubIconNoteDetail)
             } else {
-                Toast.makeText(context, getString(R.string.insert_empty_note_toast), Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    context,
+                    getString(R.string.insert_empty_note_toast),
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }
@@ -99,17 +103,18 @@ class NoteDetailsFragment : Fragment() {
                 val parent = args?.parent
                 val parentId = args?.parentId
                 //for notes that already exist
-                if (name != null && desc != null && parentId != null && name != "null" && desc != "null") {
+                if (name != "null" && desc != "null") {
                     updateNote(parentId)
                 }
                 //for new note
-                else if (binding.edtNoteTitle.text.isNotEmpty() && binding.edtNoteDetail.text.isNotEmpty()) {
-                    insertNote(parent!!,parentId!!,kind)
+                else if (title.isNotEmpty()) {
+                    insertNote(parent!!, parentId!!, kind)
                 }
                 super.remove()
                 requireActivity().onBackPressed()
             }
         }
+
         requireActivity().onBackPressedDispatcher.addCallback(
             this,  // LifecycleOwner
             callback
@@ -123,12 +128,20 @@ class NoteDetailsFragment : Fragment() {
         return args
     }
 
-    fun updateNote(parentId : Int){
-        noteDetailViewModel.updateNote(title, desc2, parentId, dateUTC)
+    fun updateNote(parentId: Int?) {
+        if (name != title || desc != desc2) {
+            if (title.isEmpty()) {
+                Toast.makeText(context, getString(R.string.updateEmptyTitle), Toast.LENGTH_SHORT).show()
+            } else {
+                noteDetailViewModel.updateNote(title, desc2, parentId!!, dateUTC)
+            }
+        } else {
+            Toast.makeText(context, getString(R.string.updateWithoutChange), Toast.LENGTH_SHORT)
+                .show()
+        }
     }
 
-
-    fun insertNote(parent : String,parentId: Int,kind : Kind){
+    fun insertNote(parent: String, parentId: Int, kind: Kind) {
         parent.let {
             parentId.let { it1 ->
                 noteDetailViewModel.getInput(
