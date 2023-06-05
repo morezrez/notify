@@ -14,11 +14,7 @@ import mamali.qa.notify.data.repositories.NoteRepository
 class NoteDetailViewModel(private val repository: NoteRepository) : ViewModel() {
 
     private fun insert(note: NoteEntity) = viewModelScope.launch {
-        withContext(Dispatchers.IO) {
-
             repository.insert(note)
-        }
-
     }
 
     fun getInput(
@@ -33,14 +29,16 @@ class NoteDetailViewModel(private val repository: NoteRepository) : ViewModel() 
         insert(note)
     }
 
-    fun updateNote(name: String, desc: String, id: Int, date: Long) = viewModelScope.launch {
-        withContext(Dispatchers.IO) {
-            repository.updateNote(name, desc, id,date)
+    fun updateNote(name: String, desc: String, id: Int, date: Long) {
+        viewModelScope.launch {
+                repository.updateNote(name, desc, id,date)
         }
     }
 
-    fun deleteNote(id: Int?) = CoroutineScope(Dispatchers.IO).launch {
-        repository.deleteNote(id)
+    fun deleteNote(id: Int?) {
+        viewModelScope.launch {
+            repository.deleteNote(id)
+        }
     }
 
 }
