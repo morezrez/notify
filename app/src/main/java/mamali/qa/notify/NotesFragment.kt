@@ -6,12 +6,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Adapter
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.PopupWindow
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.NavDirections
+import androidx.navigation.Navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import mamali.qa.notify.databinding.FragmentNotesBinding
@@ -21,13 +25,14 @@ import mamali.qa.notify.utils.showPopUpDelete
 import mamali.qa.notify.utils.showPopUpUpdateAndDelete
 
 
-class NotesFragment : Fragment(), NoteClickDeleteInterface {
+class NotesFragment : Fragment(), AdapterCommunicatorInterface {
 
     private val noteViewModel: NoteViewModel by viewModels {
         NoteViewModelFactory((requireActivity().application as NotesApplication).repository)
     }
     var popup: PopupWindow? = null
     private lateinit var binding: FragmentNotesBinding
+    private lateinit var recyclerAdapter: NoteListAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,7 +45,7 @@ class NotesFragment : Fragment(), NoteClickDeleteInterface {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val recyclerAdapter = NoteListAdapter(this, this)
+        recyclerAdapter = NoteListAdapter(this)
         binding.notesRecyclerView.apply {
             adapter = recyclerAdapter
             layoutManager = LinearLayoutManager(requireActivity())
@@ -51,10 +56,9 @@ class NotesFragment : Fragment(), NoteClickDeleteInterface {
         val parent = args?.parent.toString()
         val parentId = args?.parentId!!
         noteViewModel.getNotes(parentId)
-        //submit recycler view list
-        noteViewModel.listLiveData.observe(requireActivity(), Observer { notes ->
-            notes?.let { recyclerAdapter.submitList(it.reversed()) }
-        })
+
+        registerObserver()
+
         //making difference in toolbar for root and inside folders
         updateToolbar(parent)
 
@@ -91,11 +95,23 @@ class NotesFragment : Fragment(), NoteClickDeleteInterface {
         popup?.showAsDropDown(imgOptionBlub)
     }
 
-    private fun btnFloatingAddClicked() {
-        noteViewModel.addFloatingButtonOnClick(
-            binding.btnFloatingAddFile,
-            binding.btnFloatingAddNote
+    override fun fragmentTransferFile(parent: String, parentId: Int) {
+        val action = NotesFragmentDirections.actionNotesFragmentSelf(parent, parentId)
+        findNavController().navigate(action)
+    }
+
+    override fun fragmentTransferNote(id: Int, name: String, desc: String?, parent: String) {
+        val action = NotesFragmentDirections.actionNotesFragmentToNoteDetailsFragment(
+            id,
+            name,
+            desc,
+            parent
         )
+        findNavController().navigate(action)
+    }
+
+    private fun btnFloatingAddClicked() {
+        noteViewModel.addFloatingButtonOnClick()
     }
 
     private fun btnFloatingAddNoteClicked(parentId: Int, parent: String) {
@@ -148,4 +164,20 @@ class NotesFragment : Fragment(), NoteClickDeleteInterface {
             parent
         )
     }
+
+    private fun registerObserver() {
+        //submit recycler view list
+        noteViewModel.listLiveData.observe(viewLifecycleOwner, Observer { notes ->
+            notes?.let { recyclerAdapter.submitList(it.reversed()) }
+        })
+        //observe visibility of floating buttons
+        noteViewModel.floatingButtonVisibilityLiveData.observe(viewLifecycleOwner) { isVisible ->
+            binding.btnFloatingAddNote.isVisible = isVisible
+            binding.btnFloatingAddFile.isVisible = isVisible
+        }
+    }
+
+
 }
+
+

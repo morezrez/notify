@@ -5,20 +5,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import mamali.qa.notify.utils.getRelativeTime
 import mamali.qa.notify.utils.toPersianDigit
-import mamali.qa.notify.database.NoteDao
 import mamali.qa.notify.models.NoteViewEntity
 import java.util.Date
 
-class NoteListAdapter(
-    private val fragment: NotesFragment,
-    private val noteClickDeleteInterface: NoteClickDeleteInterface
-) :
+class NoteListAdapter(private val adapterCommunicatorInterface: AdapterCommunicatorInterface) :
     ListAdapter<NoteViewEntity, NoteListAdapter.ViewHolder>(NOTES_COMPARATOR) {
 
     class ViewHolder(ItemView: View) : RecyclerView.ViewHolder(ItemView) {
@@ -53,7 +50,8 @@ class NoteListAdapter(
                 holder.txtFileDetail.text =
                     "حاوی " + current.children.toString().toPersianDigit() + " فایل"
             } else {
-                holder.txtFileDetail.text =fragment.context?.getString(R.string.file_empty_txt)
+                holder.txtFileDetail.text =
+                    holder.txtFileDetail.context.getString(R.string.file_empty_txt)
             }
         }
 
@@ -61,26 +59,18 @@ class NoteListAdapter(
             if (current.kind == "file") {
                 val parent = current.name
                 val parentId = current.id
-                val action = NotesFragmentDirections.actionNotesFragmentSelf(parent, parentId)
-                fragment.findNavController().navigate(action)
+                adapterCommunicatorInterface.fragmentTransferFile(parent, parentId)
             } else {
-
                 val name = current.name
                 val desc = current.description
                 val id = current.id
                 val parent = current.parent
-                val action = NotesFragmentDirections.actionNotesFragmentToNoteDetailsFragment(
-                    id,
-                    name,
-                    desc,
-                    parent
-                )
-                fragment.findNavController().navigate(action)
+                adapterCommunicatorInterface.fragmentTransferNote(id,name,desc,parent)
             }
         }
 
         holder.imgOptionBlubIcon.setOnClickListener {
-            noteClickDeleteInterface.onDeleteIconClick(current.id, holder.imgOptionBlubIcon)
+            adapterCommunicatorInterface.onDeleteIconClick(current.id, holder.imgOptionBlubIcon)
         }
     }
 
@@ -105,6 +95,8 @@ class NoteListAdapter(
 
 }
 
-interface NoteClickDeleteInterface {
+interface AdapterCommunicatorInterface {
     fun onDeleteIconClick(id: Int, imgOptionBlub: ImageView)
+    fun fragmentTransferFile(parent: String, parentId: Int)
+    fun fragmentTransferNote(id: Int, name: String, desc: String?, parent: String)
 }

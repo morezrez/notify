@@ -1,6 +1,7 @@
 package mamali.qa.notify
 
 import android.view.View
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.lifecycle.*
@@ -17,13 +18,11 @@ import mamali.qa.notify.repositories.NoteRepository
 class NoteViewModel(private val repository: NoteRepository) : ViewModel() {
 
     var listLiveData: LiveData<List<NoteViewEntity>> = MutableLiveData(emptyList())
+    private val _floatingButtonVisibilityLiveData = MutableLiveData(false)
+    val floatingButtonVisibilityLiveData : LiveData<Boolean> = _floatingButtonVisibilityLiveData
 
     fun getNotes(parentId: Int? = -1) = viewModelScope.launch {
        listLiveData = repository.getNotes(parentId)
-    }
-
-    fun getSelectedNote(id : Int)=viewModelScope.launch {
-        repository.getSelectedNote(id)
     }
 
     fun insert(note: NoteEntity) = viewModelScope.launch {
@@ -38,14 +37,8 @@ class NoteViewModel(private val repository: NoteRepository) : ViewModel() {
         repository.updateFile(id,name)
     }
 
-    fun addFloatingButtonOnClick(btnFloatingAddFile : FloatingActionButton,btnFloatingAddNote : FloatingActionButton) {
-        if (btnFloatingAddFile.visibility == View.INVISIBLE && btnFloatingAddNote.visibility == View.INVISIBLE) {
-                btnFloatingAddFile.visibility = View.VISIBLE
-                btnFloatingAddNote.visibility = View.VISIBLE
-        } else {
-                btnFloatingAddFile.visibility = View.INVISIBLE
-                btnFloatingAddNote.visibility = View.INVISIBLE
-        }
+    fun addFloatingButtonOnClick() {
+        _floatingButtonVisibilityLiveData.value= _floatingButtonVisibilityLiveData.value?.not()
     }
 
     fun updateToolbar(txtToolbar : TextView, imgBack : ImageView, imgOption : ImageView,parent: String?){
