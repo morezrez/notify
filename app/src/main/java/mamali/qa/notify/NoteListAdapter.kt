@@ -1,19 +1,16 @@
 package mamali.qa.notify
 
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.PopupMenu
-import android.widget.PopupWindow
 import android.widget.TextView
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import mamali.qa.notify.Utils.getRelativeTime
-import mamali.qa.notify.Utils.toPersianDigit
+import mamali.qa.notify.utils.getRelativeTime
+import mamali.qa.notify.utils.toPersianDigit
 import mamali.qa.notify.database.NoteDao
 import java.util.Date
 

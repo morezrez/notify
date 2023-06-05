@@ -12,10 +12,10 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import mamali.qa.notify.Utils.getFormatted
-import mamali.qa.notify.Utils.toPersianDigit
+import mamali.qa.notify.utils.getFormatted
+import mamali.qa.notify.utils.toPersianDigit
 import mamali.qa.notify.databinding.FragmentNoteDetailsBinding
-import mamali.qa.notify.databinding.FragmentNotesBinding
+import mamali.qa.notify.utils.showPopUpDelete
 import mamali.qa.notify.viewModel.NoteDetailViewModel
 import mamali.qa.notify.viewModel.NoteDetailViewModelFactory
 import java.util.Date
@@ -67,7 +67,7 @@ class NoteDetailsFragment : Fragment() {
         //delete and update popup menu
         binding.optionBlubIconNoteDetail.setOnClickListener {
             if (name != null && desc != null && args?.parentId != null && name != "null" && desc != "null") {
-                popup = showPopUpDelete(requireContext()) {
+                popup = context?.showPopUpDelete {
                     noteDetailViewModel.deleteNote(args.parentId)
                     popup?.dismiss()
                     activity?.onBackPressed()

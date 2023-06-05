@@ -18,6 +18,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.SimpleItemAnimator
 import mamali.qa.notify.databinding.FragmentNotesBinding
+import mamali.qa.notify.utils.showPopUpDelete
+import mamali.qa.notify.utils.showPopUpUpdateAndDelete
 
 
 class NotesFragment : Fragment(), NoteClickDeleteInterface {
@@ -90,13 +92,13 @@ class NotesFragment : Fragment(), NoteClickDeleteInterface {
 
         binding.toolbarOptionBlubIcon.setOnClickListener {
 
-            val popup2: PopupWindow = showPopUpUpdateAndDelete(this.requireContext())
-            popup2.contentView.apply {
+            val popup2: PopupWindow? = context?.showPopUpUpdateAndDelete()
+            popup2?.contentView?.apply {
 
                 findViewById<LinearLayout>(R.id.linear_delete).setOnClickListener {
                     noteViewModel.deleteNote(parentId)
                     activity?.onBackPressed()
-                    popup2.dismiss()
+                    popup2?.dismiss()
                 }
 
                 findViewById<LinearLayout>(R.id.linear_update).setOnClickListener {
@@ -108,10 +110,10 @@ class NotesFragment : Fragment(), NoteClickDeleteInterface {
                 }
             }
 
-            popup2.isOutsideTouchable = true
-            popup2.isFocusable = true
-            popup2.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            popup2.showAsDropDown(binding.toolbarOptionBlubIcon)
+            popup2?.isOutsideTouchable = true
+            popup2?.isFocusable = true
+            popup2?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            popup2?.showAsDropDown(binding.toolbarOptionBlubIcon)
         }
 
         return binding.root
@@ -119,7 +121,7 @@ class NotesFragment : Fragment(), NoteClickDeleteInterface {
 
     override fun onDeleteIconClick(id: Int, imgOptionBlub: ImageView) {
         popup?.dismiss()
-        popup = showPopUpDelete(this.requireContext()) {
+        popup = context?.showPopUpDelete {
             noteViewModel.deleteNote(id)
             popup?.dismiss()
         }
