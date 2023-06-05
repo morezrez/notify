@@ -1,4 +1,4 @@
-package mamali.qa.notify
+package mamali.qa.notify.ui
 
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Adapter
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.PopupWindow
@@ -14,22 +13,21 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.navigation.NavDirections
-import androidx.navigation.Navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import dagger.hilt.android.AndroidEntryPoint
+import mamali.qa.notify.*
 import mamali.qa.notify.databinding.FragmentNotesBinding
 import mamali.qa.notify.dialogs.NewFileCustomDialog
 import mamali.qa.notify.dialogs.UpdateFileCustomDialog
+import mamali.qa.notify.models.NoteEntity
 import mamali.qa.notify.utils.showPopUpDelete
 import mamali.qa.notify.utils.showPopUpUpdateAndDelete
 
-
+@AndroidEntryPoint
 class NotesFragment : Fragment(), AdapterCommunicatorInterface {
 
-    private val noteViewModel: NoteViewModel by viewModels {
-        NoteViewModelFactory((requireActivity().application as NotesApplication).repository)
-    }
+    private val noteViewModel: NoteViewModel by viewModels()
     var popup: PopupWindow? = null
     private lateinit var binding: FragmentNotesBinding
     private lateinit var recyclerAdapter: NoteListAdapter
@@ -125,7 +123,7 @@ class NotesFragment : Fragment(), AdapterCommunicatorInterface {
     }
 
     private fun btnFloatingAddFileClicked(parentId: Int, parent: String) {
-        NewFileCustomDialog(parent.toString(), parentId).show(
+        NewFileCustomDialog(parent.toString(), parentId){note->noteViewModel.insert(note)}.show(
             requireActivity().supportFragmentManager,
             "MyCustomFragment"
         )
@@ -142,7 +140,7 @@ class NotesFragment : Fragment(), AdapterCommunicatorInterface {
             }
 
             findViewById<LinearLayout>(R.id.linear_update).setOnClickListener {
-                UpdateFileCustomDialog(parentId, binding.toolbarTitleTxt).show(
+                UpdateFileCustomDialog(parentId, binding.toolbarTitleTxt){id: Int?, name: String -> noteViewModel.updateFile(id,name) }.show(
                     requireActivity().supportFragmentManager,
                     "myUpadteDialog"
                 )
@@ -176,8 +174,4 @@ class NotesFragment : Fragment(), AdapterCommunicatorInterface {
             binding.btnFloatingAddFile.isVisible = isVisible
         }
     }
-
-
 }
-
-

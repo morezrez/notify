@@ -1,17 +1,27 @@
-package mamali.qa.notify
+package mamali.qa.notify.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupActionBarWithNavController
+import dagger.hilt.android.AndroidEntryPoint
+import mamali.qa.notify.NoteListAdapter
+import mamali.qa.notify.R
+import mamali.qa.notify.data.datasource.NoteLocalDataSource
+import mamali.qa.notify.data.repositories.NoteRepository
+import mamali.qa.notify.models.NoteEntity
+import mamali.qa.notify.models.NoteViewEntity
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var navController : NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         try {
             this.supportActionBar!!.hide()
         } catch (e: NullPointerException) {

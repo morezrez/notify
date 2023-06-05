@@ -4,6 +4,8 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.lifecycle.*
+import dagger.assisted.Assisted
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -11,8 +13,11 @@ import mamali.qa.notify.utils.toPersianDigit
 import mamali.qa.notify.models.NoteEntity
 import mamali.qa.notify.models.NoteViewEntity
 import mamali.qa.notify.data.repositories.NoteRepository
+import mamali.qa.notify.dialogs.NewFileCustomDialog
+import javax.inject.Inject
 
-class NoteViewModel(private val repository: NoteRepository) : ViewModel() {
+@HiltViewModel
+class NoteViewModel @Inject constructor(private val repository: NoteRepository) : ViewModel() {
 
     var listLiveData: LiveData<List<NoteViewEntity>> = MutableLiveData(emptyList())
     private val _floatingButtonVisibilityLiveData = MutableLiveData(false)
@@ -51,13 +56,6 @@ class NoteViewModel(private val repository: NoteRepository) : ViewModel() {
             imgOption.visibility=View.VISIBLE
         }
     }
-}
 
-class NoteViewModelFactory(private val repository: NoteRepository) : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(NoteViewModel::class.java)) {
-            return NoteViewModel(repository) as T
-        }
-        throw IllegalArgumentException("Unknow view model class")
-    }
+
 }

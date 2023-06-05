@@ -8,12 +8,12 @@ import androidx.room.Entity
 
 @Entity(tableName = "note_view_table")
 data class NoteViewEntity(
-    val name: String,
-    val description: String?,
-    val kind: Kind,
-    val parent: String,
-    val parent_id: Int,
+    val name: String="",
+    val description: String?="",
+    val kind: Kind=Kind.NOTHING,
+    val parent: String="",
+    val parent_id: Int=0,
     val date: Long?=null,
-    val children: Int?,
-    val id: Int
+    val children: Int?=0,
+    val id: Int=0
 )

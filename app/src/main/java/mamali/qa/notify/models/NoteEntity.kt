@@ -6,9 +6,9 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "note_table")
 data class NoteEntity(
-    @ColumnInfo(name = "name") val name: String,
+    @ColumnInfo(name = "name") val name: String="",
     @ColumnInfo(name = "description") val description: String?=null,
-    @ColumnInfo(name = "kind") val kind: Kind,
+    @ColumnInfo(name = "kind") val kind: Kind=Kind.NOTHING,
     @ColumnInfo(name = "parent") val parent: String?=null,
     @ColumnInfo(name = "parent_id") val parentId: Int?=null,
     @ColumnInfo(name = "date") val date: Long?=null,

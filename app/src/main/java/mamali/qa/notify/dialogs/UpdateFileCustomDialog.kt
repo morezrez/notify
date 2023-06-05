@@ -8,16 +8,18 @@ import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import mamali.qa.notify.NoteViewModel
-import mamali.qa.notify.NoteViewModelFactory
 import mamali.qa.notify.NotesApplication
 import mamali.qa.notify.R
 import mamali.qa.notify.databinding.DialogAddFileBinding
+import mamali.qa.notify.models.NoteEntity
 
-class UpdateFileCustomDialog(val id: Int?, private val txtToolbar: TextView) : DialogFragment() {
+class UpdateFileCustomDialog(
+    val id: Int?,
+    private val txtToolbar: TextView,
+    val updateFile: (id: Int?, name: String) -> Unit
+) : DialogFragment() {
 
-    private val noteViewModel: NoteViewModel by viewModels {
-        NoteViewModelFactory((requireActivity().application as NotesApplication).repository)
-    }
+    private val noteViewModel: NoteViewModel by viewModels()
 
     private lateinit var binding: DialogAddFileBinding
 
@@ -38,7 +40,7 @@ class UpdateFileCustomDialog(val id: Int?, private val txtToolbar: TextView) : D
         binding.btnCreate.text = getString(R.string.dialog_update_btn_txt)
         binding.btnCreate.setOnClickListener {
             val name = binding.edtFileTitle.text
-            noteViewModel.updateFile(id, name.toString())
+            updateFile(id, name.toString())
             txtToolbar.text = name
             dialog?.dismiss()
         }
