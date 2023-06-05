@@ -54,8 +54,6 @@ class NoteViewModel(private val repository: NoteRepository) : ViewModel() {
             imgOption.visibility=View.VISIBLE
         }
     }
-
-
 }
 
 class NoteViewModelFactory(private val repository: NoteRepository) : ViewModelProvider.Factory {

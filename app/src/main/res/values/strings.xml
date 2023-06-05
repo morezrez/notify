@@ -7,4 +7,9 @@
     <string name="title_example">عنوان</string>
     <string name="create_file">ایجاد پوشه</string>
     <string name="cancel_create_file">انصراف</string>
+    <string name="dialig_update_title">تغییر عنوان</string>
+    <string name="dialog_update_subtitle">عنوان جدید را وارد کنید</string>
+    <string name="dialog_update_btn_txt">تغییر عنوان</string>
+    <string name="file_empty_txt">خالی</string>
+    <string name="insert_empty_note_toast">هنوز یادداشتی ذخیره نشده است</string>
 </resources>

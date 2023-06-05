@@ -20,7 +20,6 @@ import mamali.qa.notify.viewModel.NoteDetailViewModel
 import mamali.qa.notify.viewModel.NoteDetailViewModelFactory
 import java.util.Date
 
-
 @Suppress("SENSELESS_COMPARISON")
 
 class NoteDetailsFragment : Fragment() {
@@ -36,13 +35,13 @@ class NoteDetailsFragment : Fragment() {
     lateinit var desc2: String
     val dateUTC: Long = System.currentTimeMillis()
     val date: Date = Date(dateUTC)
-    val shamsi: String = date.getFormatted()
+    private val shamsi: String = date.getFormatted()
     var popup: PopupWindow? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentNoteDetailsBinding.inflate(inflater, container, false)
 
         //get arguments
@@ -63,7 +62,6 @@ class NoteDetailsFragment : Fragment() {
             activity?.onBackPressed()
         }
 
-
         //delete and update popup menu
         binding.optionBlubIconNoteDetail.setOnClickListener {
             if (name != null && desc != null && args?.parentId != null && name != "null" && desc != "null") {
@@ -77,14 +75,13 @@ class NoteDetailsFragment : Fragment() {
                 popup?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
                 popup?.showAsDropDown(binding.optionBlubIconNoteDetail)
             } else {
-                Toast.makeText(context, "هنوز یادداشتی ذخیره نشده است", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, getString(R.string.insert_empty_note_toast), Toast.LENGTH_SHORT).show()
             }
         }
 
 
         return binding.root
     }
-
 
     //when user click on back button
     override fun onAttach(context: Context) {
@@ -130,6 +127,4 @@ class NoteDetailsFragment : Fragment() {
 
         return args
     }
-
 }
-

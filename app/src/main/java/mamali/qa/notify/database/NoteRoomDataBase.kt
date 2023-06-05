@@ -30,7 +30,6 @@ abstract class NoteRoomDataBase : RoomDatabase() {
             }
         }
     }
-
     private class NoteDatabaseCallback(
         private val scope: CoroutineScope
     ) : RoomDatabase.Callback() {
@@ -39,8 +38,5 @@ abstract class NoteRoomDataBase : RoomDatabase() {
             super.onCreate(db)
 
         }
-
     }
-
-
 }
