@@ -8,6 +8,6 @@ import mamali.qa.notify.repositories.NoteRepository
 
 class NotesApplication : Application() {
     private val applicationScope = CoroutineScope(SupervisorJob())
-    val database by lazy { NoteRoomDataBase.getDataBase(this, applicationScope) }
+    private val database by lazy { NoteRoomDataBase.getDataBase(this, applicationScope) }
     val repository by lazy {NoteRepository(database.noteDao())}
 }

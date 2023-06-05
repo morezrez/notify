@@ -10,7 +10,7 @@ import androidx.room.Entity
 data class NoteViewEntity(
     val name: String,
     val description: String?,
-    val kind: String,
+    val kind: Kind,
     val parent: String,
     val parent_id: Int,
     val date: Long?=null,

@@ -10,6 +10,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import mamali.qa.notify.models.Kind
 import mamali.qa.notify.utils.getRelativeTime
 import mamali.qa.notify.utils.toPersianDigit
 import mamali.qa.notify.models.NoteViewEntity
@@ -38,7 +39,7 @@ class NoteListAdapter(private val adapterCommunicatorInterface: AdapterCommunica
 
         holder.txtFileTitle.text = current.name.toPersianDigit()
 
-        if (current.kind == "Note") {
+        if (current.kind == Kind.Note) {
             holder.apply {
                 imgFileHighlight.setImageResource(R.drawable.note_icon_circle_highlight)
                 imgFileicon.setImageResource(R.drawable.note_icon_vector)
@@ -56,7 +57,7 @@ class NoteListAdapter(private val adapterCommunicatorInterface: AdapterCommunica
         }
 
         holder.txtFileTitle.setOnClickListener {
-            if (current.kind == "file") {
+            if (current.kind == Kind.File) {
                 val parent = current.name
                 val parentId = current.id
                 adapterCommunicatorInterface.fragmentTransferFile(parent, parentId)
