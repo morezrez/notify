@@ -9,6 +9,7 @@ fun Date.getRelativeTime(): String {
     // Get difference between current and reference time
     val diff = now - this.time
 
+    // TODO(SHAYAN): Problem, hard code
     return when {
         diff < DateUtils.MINUTE_IN_MILLIS -> return "چند لحظه پیش"
         diff < DateUtils.HOUR_IN_MILLIS -> return "${diff / DateUtils.MINUTE_IN_MILLIS} دقیقه پیش"

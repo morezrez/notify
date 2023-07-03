@@ -7,21 +7,22 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
-import mamali.qa.notify.NoteViewModel
-import mamali.qa.notify.NotesApplication
+import mamali.qa.notify.viewModel.NoteViewModel
 import mamali.qa.notify.R
 import mamali.qa.notify.models.NoteEntity
 import mamali.qa.notify.databinding.DialogAddFileBinding
 import mamali.qa.notify.models.Kind
-import mamali.qa.notify.ui.NotesFragment
 
 //dialog for update and add new file handel here
+// TODO(SHAYAN): Problem, Code style issue, put all property in one line instead of random enter,
 @AndroidEntryPoint
-class NewFileCustomDialog(val parent: String?, val parentId: Int?,
-                          val insertFile: (note: NoteEntity) -> Unit) : DialogFragment() {
+class NewFileCustomDialog(
+    val parent: String?,
+    val parentId: Int?,
+    val insertFile: (note: NoteEntity) -> Unit
+) : DialogFragment() {
 
-    private val noteViewModel: NoteViewModel by viewModels()
-
+    // TODO(SHAYAN): Problem, This cause memory leak, you must set it to null.
     private lateinit var binding: DialogAddFileBinding
 
     override fun onCreateView(
@@ -52,18 +53,15 @@ class NewFileCustomDialog(val parent: String?, val parentId: Int?,
         dialog!!.window?.setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT)
     }
 
-     fun addFileOnClick(binding: DialogAddFileBinding) {
+    fun addFileOnClick(binding: DialogAddFileBinding) {
         val name = binding.edtFileTitle.text.toString()
         val kind = Kind.File
         val parent = parent
         val parentId = parentId
         val file = NoteEntity(name, null, kind, parent, parentId)
-        //noteViewModel.insert(file)
-         insertFile(file)
-         dialog?.dismiss()
+        insertFile(file)
+        dialog?.dismiss()
     }
-
-
 
 
 }

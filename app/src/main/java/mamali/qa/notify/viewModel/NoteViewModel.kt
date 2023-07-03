@@ -1,31 +1,27 @@
-package mamali.qa.notify
+package mamali.qa.notify.viewModel
 
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.lifecycle.*
-import dagger.assisted.Assisted
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import mamali.qa.notify.utils.toPersianDigit
 import mamali.qa.notify.models.NoteEntity
-import mamali.qa.notify.models.NoteViewEntity
 import mamali.qa.notify.data.repositories.NoteRepository
-import mamali.qa.notify.dialogs.NewFileCustomDialog
 import javax.inject.Inject
 
 @HiltViewModel
 class NoteViewModel @Inject constructor(private val repository: NoteRepository) : ViewModel() {
 
-    var listLiveData: LiveData<List<NoteViewEntity>> = MutableLiveData(emptyList())
+    // TODO(SHAYAN): var as public is not good, use lazy here instead of getNotesMethod
+
+
     private val _floatingButtonVisibilityLiveData = MutableLiveData(false)
     val floatingButtonVisibilityLiveData : LiveData<Boolean> = _floatingButtonVisibilityLiveData
 
-    fun getNotes(parentId: Int? = -1) = viewModelScope.launch {
-       listLiveData = repository.getNotes(parentId)
-    }
+     fun getNotes(parentId: Int? = -1) = repository.getNotes(parentId)
+
 
     fun insert(note: NoteEntity) {
         viewModelScope.launch {
@@ -50,6 +46,7 @@ class NoteViewModel @Inject constructor(private val repository: NoteRepository) 
     }
 
     fun updateToolbar(txtToolbar : TextView, imgBack : ImageView, imgOption : ImageView,parent: String?){
+        // TODO(SHAYAN): Check hardCode string is not good way.
         if (parent!="root"){
             txtToolbar.text=parent?.toPersianDigit()
             imgBack.visibility=View.VISIBLE

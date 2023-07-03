@@ -15,10 +15,13 @@ import javax.inject.Inject
 @HiltViewModel
 class NoteDetailViewModel @Inject constructor(private val repository: NoteRepository) : ViewModel() {
 
-    private fun insert(note: NoteEntity) = viewModelScope.launch {
-            repository.insert(note)
+    // TODO(SHAYAN): Problem, don;t use equal, you return `job` with this operation and
+    //  it's not recommended for view to access viewModel job
+    private fun insert(note: NoteEntity) {
+        viewModelScope.launch {
+        repository.insert(note)
     }
-
+}
     fun getInput(
         title: String,
         desc: String,

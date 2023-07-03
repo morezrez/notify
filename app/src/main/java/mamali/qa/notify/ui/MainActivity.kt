@@ -6,13 +6,7 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupActionBarWithNavController
 import dagger.hilt.android.AndroidEntryPoint
-import mamali.qa.notify.NoteListAdapter
 import mamali.qa.notify.R
-import mamali.qa.notify.data.datasource.NoteLocalDataSource
-import mamali.qa.notify.data.repositories.NoteRepository
-import mamali.qa.notify.models.NoteEntity
-import mamali.qa.notify.models.NoteViewEntity
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {

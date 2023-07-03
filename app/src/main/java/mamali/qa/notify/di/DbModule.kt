@@ -27,6 +27,7 @@ object DbModule {
     @Provides
     @Singleton
     fun getDataBase(@ApplicationContext appContext: Context): NoteRoomDataBase {
+        // TODO(SHAYAN): Problem, This is not thread safe
         return INSTANCE ?: synchronized(this) {
             val instance = Room.databaseBuilder(
                 appContext.applicationContext,
@@ -39,15 +40,5 @@ object DbModule {
         }
     }
 
-    @Provides
-    @Singleton
-    fun provideDao(database: NoteRoomDataBase): NoteDao {
-        return database.noteDao()
-    }
 
-    @Provides
-    fun provideNoteEntity() = NoteEntity()
-
-    @Provides
-    fun provideNoteViewEntity() = NoteViewEntity()
 }

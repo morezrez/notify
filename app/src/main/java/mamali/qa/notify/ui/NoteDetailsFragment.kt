@@ -13,7 +13,6 @@ import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
-import mamali.qa.notify.NotesApplication
 import mamali.qa.notify.R
 import mamali.qa.notify.utils.getFormatted
 import mamali.qa.notify.utils.toPersianDigit
@@ -26,6 +25,8 @@ import java.util.Date
 @Suppress("SENSELESS_COMPARISON")
 @AndroidEntryPoint
 class NoteDetailsFragment : Fragment() {
+
+    // TODO(SHAYAN): Problem, Leak
     lateinit var binding: FragmentNoteDetailsBinding
 
     private val noteDetailViewModel: NoteDetailViewModel by viewModels()
@@ -70,6 +71,7 @@ class NoteDetailsFragment : Fragment() {
 
         //delete and update popup menu
         binding.optionBlubIconNoteDetail.setOnClickListener {
+            // TODO(SHAYAN): Code style, Separate to functions
             if (name != null && desc != null && args?.parentId != null && name != "null" && desc != "null") {
                 popup = context?.showPopUpDelete {
                     noteDetailViewModel.deleteNote(args.parentId)
@@ -95,7 +97,7 @@ class NoteDetailsFragment : Fragment() {
         super.onAttach(context)
         val callback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-
+                // TODO(SHAYAN): Code style, Call function
                 title = binding.edtNoteTitle.text.toString()
                 desc2 = binding.edtNoteDetail.text.toString()
                 val kind = Kind.Note
@@ -129,6 +131,7 @@ class NoteDetailsFragment : Fragment() {
     }
 
     fun updateNote(parentId: Int?) {
+        // TODO(SHAYAN): Problem, This is viewModel logic, not view side
         if (name != title || desc != desc2) {
             if (title.isEmpty()) {
                 Toast.makeText(context, getString(R.string.updateEmptyTitle), Toast.LENGTH_SHORT).show()
@@ -142,6 +145,7 @@ class NoteDetailsFragment : Fragment() {
     }
 
     fun insertNote(parent: String, parentId: Int, kind: Kind) {
+        // TODO(SHAYAN): Problem, same
         parent.let {
             parentId.let { it1 ->
                 noteDetailViewModel.getInput(

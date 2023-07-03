@@ -3,7 +3,6 @@ package mamali.qa.notify.ui
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,6 +23,7 @@ import mamali.qa.notify.dialogs.UpdateFileCustomDialog
 import mamali.qa.notify.models.RecyclerDataModel
 import mamali.qa.notify.utils.showPopUpDelete
 import mamali.qa.notify.utils.showPopUpUpdateAndDelete
+import mamali.qa.notify.viewModel.NoteViewModel
 
 @AndroidEntryPoint
 class NotesFragment : Fragment(), AdapterCommunicatorInterface {
@@ -32,6 +32,11 @@ class NotesFragment : Fragment(), AdapterCommunicatorInterface {
     var popup: PopupWindow? = null
     private lateinit var binding: FragmentNotesBinding
     private lateinit var recyclerAdapter: NoteListAdapter
+
+    val parentId by lazy{
+        val args = arguments?.let { NotesFragmentArgs.fromBundle(it) }
+        args?.parentId!!
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -50,11 +55,11 @@ class NotesFragment : Fragment(), AdapterCommunicatorInterface {
             layoutManager = LinearLayoutManager(requireActivity())
         }
         //get arguments
+        // TODO(SHAYAN): Problem, Read about SavedStateHandle
         val bundle = arguments
         val args = bundle?.let { NotesFragmentArgs.fromBundle(it) }
         val parent = args?.parent.toString()
         val parentId = args?.parentId!!
-        noteViewModel.getNotes(parentId)
 
         registerObserver()
 
@@ -83,6 +88,7 @@ class NotesFragment : Fragment(), AdapterCommunicatorInterface {
     }
 
     override fun onDeleteIconClick(id: Int, imgOptionBlub: ImageView) {
+        // TODO(SHAYAN): codeStyle, use apply
         popup?.dismiss()
         popup = context?.showPopUpDelete {
             noteViewModel.deleteNote(id)
@@ -162,6 +168,7 @@ class NotesFragment : Fragment(), AdapterCommunicatorInterface {
     }
 
     private fun updateToolbar(parent: String) {
+        // TODO(SHAYAN): Problem, You should not pass view to viewModel, it's redundant method
         noteViewModel.updateToolbar(
             binding.toolbarTitleTxt,
             binding.icBackToolbar,
@@ -172,7 +179,8 @@ class NotesFragment : Fragment(), AdapterCommunicatorInterface {
 
     private fun registerObserver() {
         //submit recycler view list
-        noteViewModel.listLiveData.observe(viewLifecycleOwner, Observer { notes ->
+        noteViewModel.getNotes(parentId).observe(viewLifecycleOwner, Observer { notes ->
+            // TODO(SHAYAN): Problem, this is viewModel logic
             val noteItemsList: List<RecyclerDataModel> = notes.map {
                 with(it) {
                     RecyclerDataModel.NoteItem(
