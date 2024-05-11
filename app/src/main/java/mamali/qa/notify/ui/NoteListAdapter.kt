@@ -73,7 +73,7 @@ class NoteListAdapter(private val adapterCommunicatorInterface: AdapterCommunica
     inner class ViewHolder(ItemView: View) : RecyclerView.ViewHolder(ItemView) {
 
 
-        fun bindNoteItem(item: RecyclerDataModel.NoteItem) {
+        private fun bindNoteItem(item: RecyclerDataModel.NoteItem) {
              val txtFileTitle: TextView = itemView.findViewById(R.id.file_title_txt)
              val txtFileDetail: TextView = itemView.findViewById(R.id.file_detail_txt)
              val imgFileicon: ImageView = itemView.findViewById(R.id.file_icon_vector)

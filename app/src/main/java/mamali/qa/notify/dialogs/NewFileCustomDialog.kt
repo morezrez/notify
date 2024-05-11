@@ -20,7 +20,6 @@ import mamali.qa.notify.ui.NotesFragment
 class NewFileCustomDialog(val parent: String?, val parentId: Int?,
                           val insertFile: (note: NoteEntity) -> Unit) : DialogFragment() {
 
-    private val noteViewModel: NoteViewModel by viewModels()
 
     private lateinit var binding: DialogAddFileBinding
 
