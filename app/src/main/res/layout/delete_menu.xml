@@ -14,27 +14,68 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="vertical"
+            android:layout_gravity="right"
+            android:gravity="right">
 
-            <TextView
-                android:textStyle="bold"
-                android:textSize="12sp"
-                android:fontFamily="@font/iraniansans"
-                android:text="حذف کردن"
-                android:layout_width="wrap_content"
-                android:layout_height="56dp"
-                android:gravity="center_vertical"
-                android:minWidth="110dp"
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp" />
-
-            <ImageView
-                android:layout_margin="8dp"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/recycler_bin_vector"
-                android:layout_gravity="center_vertical"/>
+                android:orientation="horizontal"
+                android:id="@+id/linear_delete"
+                android:paddingRight="16dp">
+
+                <TextView
+                    android:textStyle="bold"
+                    android:textSize="12sp"
+                    android:fontFamily="@font/iraniansans"
+                    android:text="حذف کردن"
+                    android:layout_width="wrap_content"
+                    android:layout_height="56dp"
+                    android:gravity="center_vertical"
+                    android:minWidth="110dp"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp" />
+
+                <ImageView
+                    android:layout_margin="8dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/recycler_bin_vector"
+                    android:layout_gravity="center_vertical"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:id="@+id/linear_ai">
+
+                <TextView
+                    android:textStyle="bold"
+                    android:textSize="12sp"
+                    android:fontFamily="@font/iraniansans"
+                    android:text="@string/aiPopUpText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="56dp"
+                    android:gravity="center_vertical"
+                    android:minWidth="110dp"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp" />
+
+                <ImageView
+                    android:layout_margin="8dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ai_icon"
+                    android:layout_gravity="center_vertical"/>
+
+            </LinearLayout>
 
         </LinearLayout>
+
+
+
     </androidx.cardview.widget.CardView>
 </FrameLayout>

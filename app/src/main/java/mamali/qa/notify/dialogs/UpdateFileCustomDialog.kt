@@ -38,6 +38,7 @@ class UpdateFileCustomDialog(
         binding.dialogTitle.text = getString(R.string.dialig_update_title)
         binding.dialogSubtitle.text = getString(R.string.dialog_update_subtitle)
         binding.btnCreate.text = getString(R.string.dialog_update_btn_txt)
+        binding.edtFileTitle.hint = getString(R.string.updateEdtHint)
         binding.btnCreate.setOnClickListener {
             val name = binding.edtFileTitle.text
             updateFile(id, name.toString())

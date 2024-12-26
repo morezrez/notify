@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:text="@string/new_folder"
+        android:text="خلاصه سازی با هوش مصنوعی"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -28,13 +28,14 @@
         android:layout_marginTop="24dp"
         android:layout_marginEnd="16dp"
         android:fontFamily="@font/iraniansans"
-        android:text="@string/new_folder_hint"
+        android:text="لطفا ضریب خلاصه سازی را برای هوش مصنوعی مشخص کنید."
         android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/dialog_title"
         android:textStyle="bold"/>
 
-    <EditText
+    <LinearLayout
+        android:orientation="horizontal"
         android:id="@+id/edt_file_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -42,16 +43,44 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:background="@drawable/edittext_frame"
-        android:fontFamily="@font/iraniansans"
-        android:hint="عنوان پوشه"
         android:padding="8dp"
-        android:textColor="@color/gray_600"
-        android:textDirection="rtl"
-        android:textSize="12sp"
-        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dialog_subtitle" />
+        app:layout_constraintTop_toBottomOf="@+id/dialog_subtitle">
+
+        <RadioGroup
+            android:id="@+id/radioGroup1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#024CAF50"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView"
+            app:layout_constraintVertical_bias="0.24000001">
+            <RadioButton
+                android:fontFamily="@font/iraniansans"
+                android:id="@+id/radioButton1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0.3" />
+
+            <RadioButton
+                android:fontFamily="@font/iraniansans"
+                android:id="@+id/radioButton2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0.5" />
+
+            <RadioButton
+                android:fontFamily="@font/iraniansans"
+                android:id="@+id/radioButton3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0.7"/>
+        </RadioGroup>
+
+    </LinearLayout>
 
     <Button
         android:id="@+id/btn_create"
@@ -62,7 +91,7 @@
         android:layout_marginBottom="16dp"
         android:background="@drawable/btn_frame"
         android:fontFamily="@font/iraniansans"
-        android:text="@string/create_file"
+        android:text="خلاصه سازی"
         android:textColor="#FFFFFF"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -83,6 +112,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/btn_create"
         app:layout_constraintTop_toBottomOf="@+id/edt_file_title" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

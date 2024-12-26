@@ -7,12 +7,12 @@ plugins {
 
 android {
     namespace 'mamali.qa.notify'
-    compileSdk 32
+    compileSdk 34
 
     defaultConfig {
         applicationId "mamali.qa.notify"
         minSdk 21
-        targetSdk 32
+        targetSdk 35
         versionCode 1
         versionName "1.0"
 
@@ -67,6 +67,9 @@ dependencies {
     // Hilt
     implementation "com.google.dagger:hilt-android:2.44"
     kapt "com.google.dagger:hilt-compiler:2.44"
+    //ads
+    implementation("ir.tapsell.plus:tapsell-plus-sdk-android:2.2.6")
+
 }
 
 kapt {

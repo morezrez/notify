@@ -14,4 +14,8 @@
     <string name="insert_empty_note_toast">هنوز یادداشتی ذخیره نشده است</string>
     <string name="updateWithoutChange">تغییری در فایل داده نشد.</string>
     <string name="updateEmptyTitle">عنوان نمیتواند خالی باشد.</string>
+    <string name="new_folder">پوشه جدید</string>
+    <string name="new_folder_hint">برای پوشه خود عنوان بنویسید.</string>
+    <string name="aiPopUpText">خلاصه سازی با هوش مصنوعی</string>
+    <string name="updateEdtHint">عنوان جدید</string>
 </resources>

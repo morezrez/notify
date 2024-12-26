@@ -3,7 +3,6 @@ package mamali.qa.notify.ui
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -83,15 +82,30 @@ class NotesFragment : Fragment(), AdapterCommunicatorInterface {
     }
 
     override fun onDeleteIconClick(id: Int, imgOptionBlub: ImageView) {
-        popup?.dismiss()
-        popup = context?.showPopUpDelete {
-            noteViewModel.deleteNote(id)
-            popup?.dismiss()
+        val popup2: PopupWindow? = context?.showPopUpUpdateAndDelete()
+        popup2?.contentView?.apply {
+
+            findViewById<LinearLayout>(R.id.linear_delete).setOnClickListener {
+                noteViewModel.deleteNote(id)
+                popup2.dismiss()
+            }
+
+            findViewById<LinearLayout>(R.id.linear_update).setOnClickListener {
+                UpdateFileCustomDialog(
+                    id,
+                    binding.toolbarTitleTxt
+                ) { id: Int?, name: String -> noteViewModel.updateFile(id, name) }.show(
+                    requireActivity().supportFragmentManager,
+                    "myUpadteDialog"
+                )
+                popup2.dismiss()
+            }
         }
-        popup?.isOutsideTouchable = true
-        popup?.isFocusable
-        popup?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        popup?.showAsDropDown(imgOptionBlub)
+
+        popup2?.isOutsideTouchable = true
+        popup2?.isFocusable = true
+        popup2?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        popup2?.showAsDropDown(imgOptionBlub)
     }
 
     override fun fragmentTransferFile(parent: String, parentId: Int) {

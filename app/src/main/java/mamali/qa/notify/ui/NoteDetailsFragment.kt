@@ -7,17 +7,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.PopupWindow
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
-import mamali.qa.notify.NotesApplication
 import mamali.qa.notify.R
 import mamali.qa.notify.utils.getFormatted
 import mamali.qa.notify.utils.toPersianDigit
 import mamali.qa.notify.databinding.FragmentNoteDetailsBinding
+import mamali.qa.notify.dialogs.TextSummerizerDialog
 import mamali.qa.notify.models.Kind
 import mamali.qa.notify.utils.showPopUpDelete
 import mamali.qa.notify.viewModel.NoteDetailViewModel
@@ -26,6 +27,7 @@ import java.util.Date
 @Suppress("SENSELESS_COMPARISON")
 @AndroidEntryPoint
 class NoteDetailsFragment : Fragment() {
+
     lateinit var binding: FragmentNoteDetailsBinding
 
     private val noteDetailViewModel: NoteDetailViewModel by viewModels()
@@ -68,13 +70,41 @@ class NoteDetailsFragment : Fragment() {
             activity?.onBackPressed()
         }
 
-        //delete and update popup menu
+        //delete popup menu
         binding.optionBlubIconNoteDetail.setOnClickListener {
             if (name != null && desc != null && args?.parentId != null && name != "null" && desc != "null") {
-                popup = context?.showPopUpDelete {
-                    noteDetailViewModel.deleteNote(args.parentId)
-                    popup?.dismiss()
-                    activity?.onBackPressed()
+                popup = context?.showPopUpDelete()
+                popup?.contentView?.apply {
+                    findViewById<LinearLayout>(R.id.linear_delete).setOnClickListener {
+                        noteDetailViewModel.deleteNote(args.parentId)
+                        popup?.dismiss()
+                        activity?.onBackPressed()
+                    }
+
+                    findViewById<LinearLayout>(R.id.linear_ai).setOnClickListener {
+                        TextSummerizerDialog(
+                            { name: String, desc: String, id: Int, date: Long ->
+                                noteDetailViewModel.updateNote(
+                                    name,
+                                    desc,
+                                    id,
+                                    date
+                                )
+                            },
+                            { originalText: String, rate: Float ->
+                                noteDetailViewModel.summarizeNote(
+                                    originalText,
+                                    rate
+                                )
+                            },
+                            binding.edtNoteDetail.text.toString(),
+                            binding.edtNoteTitle.text.toString(),
+                            args.parentId,
+                            dateUTC
+                        ).show( requireActivity().supportFragmentManager,
+                            "mySummerizeDialog")
+                        popup!!.dismiss()
+                    }
                 }
                 popup?.isOutsideTouchable = true
                 popup?.isFocusable = true
@@ -131,7 +161,8 @@ class NoteDetailsFragment : Fragment() {
     fun updateNote(parentId: Int?) {
         if (name != title || desc != desc2) {
             if (title.isEmpty()) {
-                Toast.makeText(context, getString(R.string.updateEmptyTitle), Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, getString(R.string.updateEmptyTitle), Toast.LENGTH_SHORT)
+                    .show()
             } else {
                 noteDetailViewModel.updateNote(title, desc2, parentId!!, dateUTC)
             }
