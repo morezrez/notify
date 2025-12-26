@@ -13,14 +13,16 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import mamali.qa.notify.R
-import mamali.qa.notify.utils.getFormatted
-import mamali.qa.notify.utils.toPersianDigit
 import mamali.qa.notify.databinding.FragmentNoteDetailsBinding
 import mamali.qa.notify.dialogs.TextSummerizerDialog
 import mamali.qa.notify.models.Kind
+import mamali.qa.notify.utils.getFormatted
 import mamali.qa.notify.utils.showPopUpDelete
+import mamali.qa.notify.utils.toPersianDigit
 import mamali.qa.notify.viewModel.NoteDetailViewModel
 import java.util.Date
 
@@ -32,10 +34,12 @@ class NoteDetailsFragment : Fragment() {
 
     private val noteDetailViewModel: NoteDetailViewModel by viewModels()
 
-    lateinit var name: String
-    lateinit var desc: String
-    lateinit var title: String
-    lateinit var desc2: String
+    // Changed to nullable to be safer
+    var name: String? = null
+    var desc: String? = null
+    var title: String = ""
+    var desc2: String = ""
+
     val dateUTC: Long = System.currentTimeMillis()
     val date: Date = Date(dateUTC)
     private val shamsi: String = date.getFormatted()
@@ -52,29 +56,31 @@ class NoteDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //get arguments
+        // get arguments
         val args = getArgs()
         name = args?.name.toString()
         desc = args?.desc.toString()
 
-        //handel difference between new note and some old note that have desc and title
+        // handle difference between new note and some old note that have desc and title
         if (name != null && desc != null && name != "null" && desc != "null") {
             binding.edtNoteTitle.setText(name)
             binding.edtNoteDetail.setText(desc)
         }
 
-        //date
+        // date
         binding.txtNoteDate.text = shamsi.toPersianDigit()
 
         binding.icBackToolbarNoteDetail.setOnClickListener {
             activity?.onBackPressed()
         }
 
-        //delete popup menu
+        // delete popup menu
         binding.optionBlubIconNoteDetail.setOnClickListener {
+            // Check for valid existing note
             if (name != null && desc != null && args?.parentId != null && name != "null" && desc != "null") {
                 popup = context?.showPopUpDelete()
                 popup?.contentView?.apply {
+
                     findViewById<LinearLayout>(R.id.linear_delete).setOnClickListener {
                         noteDetailViewModel.deleteNote(args.parentId)
                         popup?.dismiss()
@@ -82,27 +88,49 @@ class NoteDetailsFragment : Fragment() {
                     }
 
                     findViewById<LinearLayout>(R.id.linear_ai).setOnClickListener {
-                        TextSummerizerDialog(
-                            { name: String, desc: String, id: Int, date: Long ->
+
+                        // We declare dialog first to reference it inside the callback
+                        var dialog: TextSummerizerDialog? = null
+
+                        dialog = TextSummerizerDialog(
+                            // 1. Save Callback
+                            { nameVal, descVal, idVal, dateVal ->
                                 noteDetailViewModel.updateNote(
-                                    name,
-                                    desc,
-                                    id,
-                                    date
+                                    nameVal,
+                                    descVal,
+                                    idVal,
+                                    dateVal
                                 )
                             },
+                            // 2. Summarize Callback (Fixes "Processing..." stuck issue)
                             { originalText: String, rate: Float ->
-                                noteDetailViewModel.summarizeNote(
-                                    originalText,
-                                    rate
-                                )
+
+                                // Launch Coroutine in Fragment Scope
+                                viewLifecycleOwner.lifecycleScope.launch {
+                                    try {
+                                        // Calculate summary (suspend function)
+                                        val summary = noteDetailViewModel.summarizeNote(originalText, rate)
+
+                                        // Update the Dialog UI when ready
+                                        // NOTE: Ensure your TextSummerizerDialog has this function!
+                                        dialog?.updateSummaryText(summary)
+
+                                    } catch (e: Exception) {
+                                        dialog?.updateSummaryText("خطا در خلاصه سازی")
+                                        e.printStackTrace()
+                                    }
+                                }
+
+                                // Return immediately to show initial loading state
+                                "در حال پردازش..."
                             },
                             binding.edtNoteDetail.text.toString(),
                             binding.edtNoteTitle.text.toString(),
                             args.parentId,
                             dateUTC
-                        ).show( requireActivity().supportFragmentManager,
-                            "mySummerizeDialog")
+                        )
+
+                        dialog.show(requireActivity().supportFragmentManager, "mySummerizeDialog")
                         popup!!.dismiss()
                     }
                 }
@@ -120,7 +148,7 @@ class NoteDetailsFragment : Fragment() {
         }
     }
 
-    //when user click on back button
+    // when user click on back button
     override fun onAttach(context: Context) {
         super.onAttach(context)
         val callback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
@@ -132,16 +160,20 @@ class NoteDetailsFragment : Fragment() {
                 val args = getArgs()
                 val parent = args?.parent
                 val parentId = args?.parentId
-                //for notes that already exist
-                if (name != "null" && desc != "null") {
+
+                // for notes that already exist
+                if (name != "null" && desc != "null" && name != null && desc != null) {
                     updateNote(parentId)
                 }
-                //for new note
+                // for new note
                 else if (title.isNotEmpty()) {
-                    insertNote(parent!!, parentId!!, kind)
+                    if (parent != null && parentId != null) {
+                        insertNote(parent, parentId, kind)
+                    }
                 }
-                super.remove()
-                requireActivity().onBackPressed()
+
+                isEnabled = false
+                requireActivity().onBackPressedDispatcher.onBackPressed()
             }
         }
 
@@ -151,11 +183,9 @@ class NoteDetailsFragment : Fragment() {
         )
     }
 
-    //function for get arguments
     fun getArgs(): NoteDetailsFragmentArgs? {
         val bundle = arguments
-        val args = bundle?.let { NoteDetailsFragmentArgs.fromBundle(it) }
-        return args
+        return bundle?.let { NoteDetailsFragmentArgs.fromBundle(it) }
     }
 
     fun updateNote(parentId: Int?) {
@@ -164,22 +194,19 @@ class NoteDetailsFragment : Fragment() {
                 Toast.makeText(context, getString(R.string.updateEmptyTitle), Toast.LENGTH_SHORT)
                     .show()
             } else {
-                noteDetailViewModel.updateNote(title, desc2, parentId!!, dateUTC)
+                parentId?.let {
+                    noteDetailViewModel.updateNote(title, desc2, it, dateUTC)
+                }
             }
         } else {
-            Toast.makeText(context, getString(R.string.updateWithoutChange), Toast.LENGTH_SHORT)
-                .show()
+            // Optional: Toast for no changes
         }
     }
 
     fun insertNote(parent: String, parentId: Int, kind: Kind) {
-        parent.let {
-            parentId.let { it1 ->
-                noteDetailViewModel.getInput(
-                    title, desc2, kind, it,
-                    it1, dateUTC
-                )
-            }
-        }
+        noteDetailViewModel.getInput(
+            title, desc2, kind, parent,
+            parentId, dateUTC
+        )
     }
 }
